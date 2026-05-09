@@ -3,6 +3,9 @@
 Automated Bill of Entry & Checklist Reconciliation tool built for Nagarkot Forwarders Pvt. Ltd.
 It parses PDF documents to extract duty information and identify discrepancies.
 
+> 📖 **Looking for instructions on how to use the application?** 
+> Please refer to the [USER_GUIDE.md](./USER_GUIDE.md) for a comprehensive, step-by-step breakdown of the interface, workflows, and troubleshooting.
+
 ## Tech Stack
 - Python 3.14
 - Custom Tkinter GUI

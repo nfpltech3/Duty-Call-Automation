@@ -10,7 +10,8 @@ import win32clipboard
 import html
 from tkinter import ttk
 
-GOOGLE_SHEET_ID = "1sPcHdIzRtsCnrknTyLKQ8QGM1gSw1B1GEa8BECSg4ds"
+# Replace with your Google Apps Script Web App URL
+GOOGLE_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyongYtOYdTh1SHTlSoFsTK7N0Xp53UblTAHgu6ZuWT4WopTS1uIcqIKx23MiyJqepCrw/exec"
 
 def clean_date(d):
     try:
@@ -26,6 +27,20 @@ def clean_date(d):
     except (ValueError, IndexError, TypeError):
         pass
     return d
+
+def clean_importer_name(name: str) -> str:
+    if not name or name == "Unknown":
+        return "Unknown"
+    raw_words = [w.strip() for w in name.split() if w.strip()]
+    cleaned_words = []
+    for w in raw_words:
+        w_clean = re.sub(r'[^A-Za-z]', '', w).upper()
+        if len(w_clean) <= 1 or w_clean in ("MS", "M/S", "MR", "MRS"):
+            continue
+        cleaned_words.append(w.upper())
+    if not cleaned_words:
+        cleaned_words = [w.upper() for w in raw_words]
+    return " ".join(cleaned_words[:2])
 
 def format_date_boe(d):
     try:
@@ -699,6 +714,8 @@ class BECopyParserApp:
         self.validation_results: dict[str, dict] = {}
         self.branch_dfs: dict[str, pd.DataFrame] = {}
         self._copy_flash_id = None
+        self.upload_thread = None
+        self.root.protocol("WM_DELETE_WINDOW", self._on_closing)
 
         self._build_header()
         self._build_body()
@@ -953,8 +970,9 @@ class BECopyParserApp:
                 try: self.notebook.select(self._tab_keys.index("__validation_report__"))
                 except Exception: pass
         
-        # import threading
-        # threading.Thread(target=self._upload_high_diff_to_sheets, daemon=True).start()
+        import threading
+        self.upload_thread = threading.Thread(target=self._upload_high_diff_to_sheets, daemon=True)
+        self.upload_thread.start()
 
     def _on_clear(self) -> None:
         self.branch_dfs = {}
@@ -1267,11 +1285,14 @@ class BECopyParserApp:
     def _upload_high_diff_to_sheets(self) -> None:
         """Silently appends HIGH RISK / No-match validation rows to Google Sheet."""
         try:
-            import gspread
-            import google.auth
+            import requests
+            import json
         except ImportError:
-            self.be_warnings.append("Google Sheets upload skipped: gspread or google-auth not installed.")
+            self.be_warnings.append("Google Sheets upload skipped: requests not installed.")
             return
+
+        if not GOOGLE_WEB_APP_URL:
+            return  # URL not configured
 
         high_diff_rows = [
             vr for vr in self.validation_results.values()
@@ -1284,34 +1305,13 @@ class BECopyParserApp:
             return  # Nothing to upload — exit silently
 
         try:
-            import os
-            from pathlib import Path
-            exe_dir = get_exe_path()
-            cred_file = exe_dir / "credentials.json"
-            client_secret = exe_dir / "client_secret.json"
-            token_file = exe_dir / "token.json"
-            
-            if cred_file.exists():
-                gc = gspread.service_account(filename=str(cred_file))
-            elif client_secret.exists() or token_file.exists():
-                gc = gspread.oauth(
-                    credentials_filename=str(client_secret),
-                    authorized_user_filename=str(token_file)
-                )
-            else:
-                scopes = ["https://www.googleapis.com/auth/spreadsheets"]
-                creds, _ = google.auth.default(scopes=scopes)
-                gc = gspread.authorize(creds)
-                
-            sh = gc.open_by_key(GOOGLE_SHEET_ID)
-            ws = sh.worksheet("Validation Log")
 
             timestamp = datetime.datetime.now().strftime("%d-%b-%Y %H:%M")
 
             rows_to_append = []
             for vr in high_diff_rows:
                 be_no = vr.get("be_no", "")
-                importer = self.raw_be_data.get(be_no, {}).get("IMPORTER", "Unknown")
+                importer = clean_importer_name(self.raw_be_data.get(be_no, {}).get("IMPORTER", "Unknown"))
                 rows_to_append.append([
                     timestamp,                              # Timestamp
                     importer,                               # Importer
@@ -1326,22 +1326,39 @@ class BECopyParserApp:
                     vr.get("be_scripts", ""),               # BE Scripts
                     vr.get("cl_foregone", ""),              # CL Foregone
                     vr.get("foregone_diff", ""),            # Foregone Diff
-                    vr.get("status", ""),                   # Status
-                    "; ".join(vr.get("remarks", [])),       # Remarks
                 ])
 
-            ws.append_rows(rows_to_append, value_input_option="USER_ENTERED")
+            # Send an unauthenticated HTTP POST to the Google Apps Script Web App
+            response = requests.post(
+                GOOGLE_WEB_APP_URL, 
+                data=json.dumps({"rows": rows_to_append}), 
+                headers={"Content-Type": "application/json"},
+                timeout=15 
+            )
+            
+            # Check 1: Did Google's servers reject the request entirely? (e.g., 429 Too Many Requests, 500 Server Error)
+            if response.status_code != 200:
+                err_text = response.text
+                if "<html>" in err_text.lower() or "<!doctype" in err_text.lower() or "<style" in err_text.lower():
+                    err_text = "HTML Error Page (Verify 'Who has access: Anyone' in deployment settings)"
+                raise Exception(f"HTTP {response.status_code}: {err_text[:150]}")
+
+            # Check 2: Did the Apps Script run, but catch an internal Google Sheets error?
+            if response.text.startswith("Error:"):
+                # Raise an exception so it triggers the retry loop or fails gracefully
+                raise Exception(f"Apps Script Error: {response.text}")
+
+            # If we get here, it truly succeeded!
             def _update_ui():
                 self._set_status(
-                    f"{self.status_var.get()} — {len(rows_to_append)} high-diff row(s) logged to sheet.",
+                    f"Success: {len(rows_to_append)} high-diff row(s) logged to sheet.",
                     "#2E7D32"
                 )
             self.root.after(0, _update_ui)
+            return  # Exit the loop and the function entirely
 
         except Exception as e:
             err_msg = str(e)
-            if "insufficient authentication scopes" in err_msg:
-                err_msg = "Google Auth scopes missing. Run gcloud auth application-default login --scopes=https://www.googleapis.com/auth/spreadsheets"
             def _fail_ui():
                 self._set_status(f"Google Sheets Upload Failed: {err_msg}", "#D8232A")
             self.root.after(0, _fail_ui)
@@ -1498,6 +1515,29 @@ class BECopyParserApp:
             self._flash_copy_success()
         finally:
             self.btn_copy_table.configure(state=tk.NORMAL)
+
+    def _on_closing(self) -> None:
+        """Handles the window close event to ensure background uploads finish."""
+        if self.upload_thread and self.upload_thread.is_alive():
+            self._set_status("Closing... Waiting for Google Sheets sync to finish.", "#D8232A")
+            self.btn_select.configure(state=tk.DISABLED)
+            self.btn_checklist.configure(state=tk.DISABLED)
+            self.btn_copy_table.configure(state=tk.DISABLED)
+            self.btn_clear.configure(state=tk.DISABLED)
+            messagebox.showinfo(
+                "Sync in Progress", 
+                "Validation data is currently syncing to the cloud.\n\nThe application will close automatically in a few seconds."
+            )
+            self._check_thread_and_close()
+        else:
+            self.root.destroy()
+
+    def _check_thread_and_close(self) -> None:
+        """Loops every 500ms until the thread dies, then destroys the app."""
+        if self.upload_thread and self.upload_thread.is_alive():
+            self.root.after(500, self._check_thread_and_close)
+        else:
+            self.root.destroy()
 
 def main() -> None:
     root = tk.Tk()
