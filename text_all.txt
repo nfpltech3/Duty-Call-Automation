@@ -1,0 +1,1035 @@
+
+--- PAGE 0 ---
+Port Code BE No BE Date BE Type
+INNSA1 9025944 02/05/2026 H
+IEC/Br 0307019390/0 FIRST COPY
+GSTIN/TYPE 27AACCV4229P1ZT/G
+INDIAN CUSTOMS CB CODE AACCN5739JCH001
+TYPE INV ITEM CONT
+PORT : Nos 1 1 1
+BILL OF ENTRY FOR HOME CONSUMPTION PKG 2 G.WT (KGS) 75.2 BE0020520261406
+PART - I - BILL OF ENTRY SUMMARY
+7.ADV BE 11.FIRST 12. PROV/
+1.BE STATUS 2.MODE 3.DEF BE 4.KACHA 5.SEC 48 6.REIMP 8.ASSESS 9.EXAM 10.HSS
+(Y/N/P) CHECK FINAL
+FIRST COPY Sea T N N N A N N N N P
+13.COUNTRY OF ORIGIN BRAZIL 14.COUNTRY OF CONSIGNMENT BRAZIL
+15.PORT OF LOADING Santos 16.PORT OF SHIPMENT Santos
+1.IMPORTER NAME & ADDRESS
+SKODA AUTO VOLKSWAGEN INDIA PRIVATE LIMITED Y
+E-1, MIDC Industrial Area, Phase II
+Mhalunge Kharabwadi Chakan Tal 2.CB NAME NAGARKOT FORWARDERS PVT. LTD.
+Khed 3.AEOP
+410501 4.UCR
+AD CODE 6450006
+1.BCD 2.ACD 3.SWS 4.NCCD 5.ADD O6.CVD 7.IGST 8.G.CESS 18.TOT.ASS VAL
+0 0 1303.3 0 0 18221 0 86889
+9.SG 10.SAED 11.GSIA 12.TTA 13.HEALTH 14.TOTAL DUTY 15.INT 16.PNLTY 17.FINE 19.TOT. AMOUNT
+19524 0 0 0 19524
+C
+1.IGM NO 2.IGM DATE 3.INW DATE 4.GIGMNO 5.GIGMDT 6.MAWB NO 7.DATE 8.HAWB NO 9.DATE
+0 0 ONEYSAOG0 23/03/2026 1072783219 23/03/2026
+3349700
+D
+1.BOND NO. 2.PORT 3.BOND CD 4.DEBT AMT 5.BG AMT 1.SR NO 2.CHALLAN NO 3.PAID ON 4.AMOUNT(Rs.)
+E 200565041 INNSA1 PD 86889 0 1 2060820926 19524
+S
+S
+1.WBE NO. 2.DATE 3.WBE SITE 4.WH CODE 1.S.NO 2.INVOICE NO 3.INV. AMT 4.CUR
+E 1 0091974852 864 USD
+1.EVENT 2.DATE 3.TIME EXCHANGE RATE
+Submission 02-MAY-26 S14:03 INR=INR
+Assessment 02-MAY-26 14:05 1 USD=94.2INR Examination
+OOC S
+A
+1.SNO 2.LCL/ 3.TRUCK 4.SEAL 5.CONTAINER NUMBER
+FCL
+1 L LAAD46330 FFAU6219046
+OOC NO.
+OOC DATE
+A : DEF - Deferred Payment, REIMP - Reimport, ADV - Advance, P - Prior, HSS - HighSeaSale; B : CB - Customs Broker, AEO - Authorized
+Economic Operator, UCR - Unique Customs Reference; D : GIGM - Gateway IGM; G : WBE - WareHouse BE; I : OOC - Out of Charge, # Refer Par
+Page 1 Of 6
+Verify using ICETRAK Mobile App (Google Play Store) for authentication & latest version details from ICEGATE Enquiry
+*
+SLIATED
+RENIATNOC
+.J
+#YRAMMUS
+- SLIATED
+ECIOVNI
+S
+L AI T
+B
+O N D
+D E T N E M
+Y A P
+.F
+S L IA
+T E D
+E.
+.G
+W
+H
+G
+N
+IS
+S E C S L IA
+OT
+RE
+P
+.H
+D .I
+TSEFINAM.D
+SLIATED
+Y
+T
+U
+D
+C.
+YRAMMUS
+S
+U
+.AA T
+T
+S
+T
+N
+A
+R
+.BA
+L C
+E
+D
+10.PKG 11.GW
+2 75.2
+Finalisation
+GLOSSARY
+IV for full list of Invoices J : * Refer Part IV for full list of Containers, AP - Authorised Person
+--- PAGE 0 LAYOUT ---
+                                                                                    
+                                                                                    
+                                                                                    
+                                           Port Code BE No BE Date BE Type          
+                                           INNSA1   9025944 02/05/2026 H            
+                                           IEC/Br    0307019390/0 FIRST COPY        
+                                           GSTIN/TYPE  27AACCV4229P1ZT/G            
+               INDIAN   CUSTOMS            CB CODE     AACCN5739JCH001              
+                                           TYPE      INV    ITEM CONT               
+                      PORT :               Nos        1      1     1                
+            BILL OF ENTRY FOR HOME CONSUMPTION PKG    2   G.WT (KGS) 75.2 BE0020520261406
+                               PART - I - BILL OF ENTRY SUMMARY                     
+                                            7.ADV BE              11.FIRST 12. PROV/
+         1.BE STATUS 2.MODE 3.DEF BE 4.KACHA 5.SEC 48 6.REIMP 8.ASSESS 9.EXAM 10.HSS
+                                             (Y/N/P)               CHECK  FINAL     
+         FIRST COPY Sea T    N     N    N     A      N     N    N   N      P        
+         13.COUNTRY OF ORIGIN  BRAZIL      14.COUNTRY OF CONSIGNMENT  BRAZIL        
+         15.PORT OF LOADING    Santos      16.PORT OF SHIPMENT        Santos        
+         1.IMPORTER NAME & ADDRESS                                                  
+         SKODA AUTO VOLKSWAGEN INDIA PRIVATE LIMITED Y                              
+         E-1, MIDC Industrial Area, Phase II                                        
+         Mhalunge Kharabwadi Chakan Tal    2.CB NAME NAGARKOT FORWARDERS PVT. LTD.  
+         Khed                              3.AEOP                                   
+         410501                            4.UCR                                    
+          AD CODE 6450006                                                           
+           1.BCD   2.ACD  3.SWS 4.NCCD 5.ADD O6.CVD      7.IGST 8.G.CESS 18.TOT.ASS VAL
+            0       0     1303.3        0       0        18221    0      86889      
+           9.SG   10.SAED 11.GSIA 12.TTA 13.HEALTH 14.TOTAL DUTY 15.INT 16.PNLTY 17.FINE 19.TOT. AMOUNT
+                                               19524   0     0    0      19524      
+                                          C                                         
+          1.IGM NO 2.IGM DATE 3.INW DATE 4.GIGMNO 5.GIGMDT 6.MAWB NO 7.DATE 8.HAWB NO 9.DATE
+            0                     0         ONEYSAOG0 23/03/2026 1072783219 23/03/2026
+                                             3349700                                
+                                    D                                               
+          1.BOND NO. 2.PORT 3.BOND CD 4.DEBT AMT 5.BG AMT 1.SR NO 2.CHALLAN NO 3.PAID ON 4.AMOUNT(Rs.)
+                                  E 200565041 INNSA1 PD 86889 0 1 2060820926 19524  
+                                S                                                   
+                             S                                                      
+          1.WBE NO. 2.DATE 3.WBE SITE 4.WH CODE 1.S.NO  2.INVOICE NO 3.INV. AMT 4.CUR
+                           E                      1      0091974852   864   USD     
+          1.EVENT 2.DATE 3.TIME EXCHANGE RATE                                       
+         Submission 02-MAY-26 S14:03 INR=INR                                        
+         Assessment 02-MAY-26 14:05 1 USD=94.2INR Examination                       
+         OOC           S                                                            
+                     A                                                              
+         1.SNO 2.LCL/ 3.TRUCK 4.SEAL 5.CONTAINER NUMBER                             
+              FCL                                                                   
+          1   L         LAAD46330 FFAU6219046                                       
+                                           OOC NO.                                  
+                                           OOC DATE                                 
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+      A : DEF - Deferred Payment, REIMP - Reimport, ADV - Advance, P - Prior, HSS - HighSeaSale; B : CB - Customs Broker, AEO - Authorized
+      Economic Operator, UCR - Unique Customs Reference; D : GIGM - Gateway IGM; G : WBE - WareHouse BE; I : OOC - Out of Charge, # Refer Par
+                                                                                    
+                                                                                    
+                                   Page   1 Of 6                                    
+           Verify using ICETRAK Mobile App (Google Play Store) for authentication & latest version details from ICEGATE Enquiry
+       *                                                                            
+       SLIATED                                                                      
+       RENIATNOC                                                                    
+     .J                                                                             
+                                             #YRAMMUS                               
+                                             - SLIATED                              
+                                             ECIOVNI                                
+      S                                                                             
+      L AI                                  T                                       
+      B                                                                             
+      O N D                                                                         
+      D E T                                 N E M                                   
+                                            Y A P                                   
+                                            .F                                      
+                                              S L IA                                
+                                              T E D                                 
+      E.                                                                            
+     .G                                                                             
+       W                                                                            
+       H                                                                            
+      G                                                                             
+      N                                                                             
+      IS                                                                            
+      S E C S L IA                                                                  
+      OT                                                                            
+      RE                                                                            
+      P                                                                             
+      .H                                                                            
+       D                                    .I                                      
+     TSEFINAM.D                                                                     
+       SLIATED                                                                      
+     Y                                                                              
+     T                                                                              
+     U                                                                              
+     D                                                                              
+     C.                                                                             
+       YRAMMUS                                                                      
+       S                                                                            
+       U                                                                            
+      .AA T                                                                         
+       T                                                                            
+       S                                                                            
+       T                                                                            
+       N                                                                            
+       A                                                                            
+       R                                                                            
+      .BA                                                                           
+       L C                                                                          
+       E                                                                            
+       D                                                                            
+                                                                       10.PKG 11.GW 
+                                                                         2   75.2   
+         Finalisation                                                               
+                                       GLOSSARY                                     
+      IV for full list of Invoices J : * Refer Part IV for full list of Containers, AP - Authorised Person
+--- PAGE 1 ---
+Port Code BE No BE Date BE Type
+INNSA1 9025944 02/05/2026 H
+IEC/Br 0307019390/0 FIRST COPY
+GSTIN/TYPE 27AACCV4229P1ZT/G
+INDIAN CUSTOMS CB CODE AACCN5739JCH001
+TYPE INV ITEM CONT
+PORT : Nos 1 1 1
+BILL OF ENTRY FOR HOME CONSUMPTION PKG 2 G.WT (KGS) 75.2 BE0020520261406
+PART - II - INVOICE & VALUATION DETAILS (Invoice 1 1 )
+E
+C 1.S.NO 2.INVOICE NO. & DT. 3.PURCHASE ORDER NO & DT 4.LC NO & DATE 5.CONTRACT NO & DATE
+.AV
+OI
+1 0091974852
+N
+I 17-FEB-26
+1.BUYER'S NAME & ADDRESS 2.SELLER'S NAME & ADDRESS
+SKODA AUTO VOLKSWAGEN INDIA PRIVATE LIMITED Y
+E-1, MIDC Industrial Area, Phase II
+Mhalunge Kharabwadi Chakan Tal
+Khed P
+410501
+4.THIRD PARTY NAME & ADDRESS
+Volkswagen do Brasil Industrie de Veiculos Automot O
+ores Ltda Via Anchieta Km 23.5 SAO
+BERNARDO DO CAMPO - SP - BRASIL Gua
+rulhos Apt/Sao Paulo, , Brazil
+Brazil C
+5.AEO
+1.INV VALUE2.FREIGHT3.INSURANCE 4.HSS. 5.LOAD ING6.COMMN 7.PAY TERMS 8.VALUATION METHOD
+864 58 .045% OTH RULE 4 (TRANSACTION VALUE)
+14.Cur USD USD 9.RELTD10.SVB CH 11.SVB NO 12.DATE 13LOA
+15.TermFOB Yes INBOM1 S/9-134-GATT/200 30-JUN-11 0
+1.C&B 2.CoC 3.CoP 4.HND CHGD5.G&S 6.DOC. CH
+7.COO 8.R & LF 9.OTH COST 10.LD / ULD 11.WS 12.OTC 13.MISC CHARGE 14.ASS. VALUE
+E 86889.02
+1.S NO. 2.CTH 3.DESCRIPTION 4.UNIT PRICE 5.QUANTITY 6.UQC 7.AMOUNT
+S
+1 87089900 2QB407623 DEFLECTOR RING .080000 10800.000000 NOS 864.00
+(AUTOMOTIVE PARTS FOR CAPTIVE
+CONSUMPTION)
+S
+E
+S
+S
+A
+Page 2 Of 6
+Verify using ICETRAK Mobile App (Google Play Store) for authentication & latest version details from ICEGATE Enquiry
+SEITRAP
+GNITCASNART
+B.
+.C
+S
+E C
+IV
+R
+E S
+&
+TSOC
+.D
+3.SUPPLIER NAME & ADDRESS
+6. AD CODE 6450006
+N
+O
+IT
+A
+U
+L
+A V
+S
+L
+IA
+T
+E.E
+D
+M
+E
+T
+I
+GLOSSARY
+A : LC - Letter of Credit; B : AD - Authorized Dealer; C : HSS - High Sea Sale; D : C&B Commission & Brokerage, CoC - Cost of Container,CoP - Co
+of Packing, HND CHG - Handling Charges, G&S - Goods and Service input cost, DOC CH - Document Charges, CoO - Country of Origin Certificate,
+R&LF - Royalty and Licence Fees, LD/ULD - Loading Unloading Charges, WS - Warranty Services, OTC - Other Costs, CTH - Customs Tariff Head,
+UQC - Unit Quantity Code
+--- PAGE 1 LAYOUT ---
+                                                                                    
+                                                                                    
+                                                                                    
+                                           Port Code BE No BE Date BE Type          
+                                           INNSA1   9025944 02/05/2026 H            
+                                           IEC/Br    0307019390/0 FIRST COPY        
+                                           GSTIN/TYPE  27AACCV4229P1ZT/G            
+               INDIAN   CUSTOMS            CB CODE     AACCN5739JCH001              
+                                           TYPE      INV    ITEM CONT               
+                      PORT :               Nos        1      1     1                
+            BILL OF ENTRY FOR HOME CONSUMPTION PKG    2   G.WT (KGS) 75.2 BE0020520261406
+                     PART - II - INVOICE & VALUATION DETAILS (Invoice 1 1 )         
+       E                                                                            
+       C 1.S.NO 2.INVOICE NO. & DT. 3.PURCHASE ORDER NO & DT 4.LC NO & DATE 5.CONTRACT NO & DATE
+     .AV                                                                            
+       OI                                                                           
+           1    0091974852                                                          
+       N                                                                            
+       I        17-FEB-26                                                           
+                 1.BUYER'S NAME & ADDRESS            2.SELLER'S NAME & ADDRESS      
+         SKODA AUTO VOLKSWAGEN INDIA PRIVATE LIMITED Y                              
+         E-1, MIDC Industrial Area, Phase II                                        
+         Mhalunge Kharabwadi Chakan Tal                                             
+         Khed                                 P                                     
+         410501                                                                     
+                                                   4.THIRD PARTY NAME & ADDRESS     
+         Volkswagen do Brasil Industrie de Veiculos Automot O                       
+         ores Ltda Via Anchieta Km 23.5 SAO                                         
+         BERNARDO DO CAMPO - SP - BRASIL Gua                                        
+         rulhos Apt/Sao Paulo, , Brazil                                             
+         Brazil                          C                                          
+         5.AEO                                                                      
+         1.INV VALUE2.FREIGHT3.INSURANCE 4.HSS. 5.LOAD ING6.COMMN 7.PAY TERMS 8.VALUATION METHOD
+           864    58    .045%                      OTH      RULE 4 (TRANSACTION VALUE)
+         14.Cur USD USD                          9.RELTD10.SVB CH 11.SVB NO 12.DATE 13LOA
+         15.TermFOB                               Yes  INBOM1 S/9-134-GATT/200 30-JUN-11 0
+          1.C&B  2.CoC  3.CoP 4.HND CHGD5.G&S 6.DOC. CH                             
+          7.COO 8.R & LF 9.OTH COST 10.LD / ULD 11.WS 12.OTC 13.MISC CHARGE 14.ASS. VALUE
+                                 E                                      86889.02    
+         1.S NO. 2.CTH      3.DESCRIPTION     4.UNIT PRICE 5.QUANTITY 6.UQC 7.AMOUNT
+                               S                                                    
+           1   87089900 2QB407623 DEFLECTOR RING  .080000 10800.000000 NOS  864.00  
+                      (AUTOMOTIVE PARTS FOR CAPTIVE                                 
+                      CONSUMPTION)                                                  
+                             S                                                      
+                           E                                                        
+                         S                                                          
+                       S                                                            
+                    A                                                               
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                   Page   2 Of 6                                    
+           Verify using ICETRAK Mobile App (Google Play Store) for authentication & latest version details from ICEGATE Enquiry
+       SEITRAP                                                                      
+       GNITCASNART                                                                  
+     B.                                                                             
+      .C                                                                            
+       S                                                                            
+       E C                                                                          
+       IV                                                                           
+       R                                                                            
+       E S                                                                          
+      &                                                                             
+      TSOC                                                                          
+      .D                                                                            
+                 3.SUPPLIER NAME & ADDRESS                                          
+                                           6. AD CODE 6450006                       
+       N                                                                            
+       O                                                                            
+       IT                                                                           
+       A                                                                            
+       U                                                                            
+       L                                                                            
+       A V                                                                          
+       S                                                                            
+       L                                                                            
+       IA                                                                           
+       T                                                                            
+      E.E                                                                           
+       D                                                                            
+       M                                                                            
+       E                                                                            
+       T                                                                            
+       I                                                                            
+                                       GLOSSARY                                     
+     A : LC - Letter of Credit; B : AD - Authorized Dealer; C : HSS - High Sea Sale; D : C&B Commission & Brokerage, CoC - Cost of Container,CoP - Co
+     of Packing, HND CHG - Handling Charges, G&S - Goods and Service input cost, DOC CH - Document Charges, CoO - Country of Origin Certificate,
+     R&LF - Royalty and Licence Fees, LD/ULD - Loading Unloading Charges, WS - Warranty Services, OTC - Other Costs, CTH - Customs Tariff Head,
+     UQC - Unit Quantity Code                                                       
+--- PAGE 2 ---
+Port Code BE No BE Date BE Type
+INNSA1 9025944 02/05/2026 H
+IEC/Br 0307019390/0 FIRST COPY
+GSTIN/TYPE 27AACCV4229P1ZT/G
+INDIAN CUSTOMS CB CODE AACCN5739JCH001
+TYPE INV ITEM CONT
+PORT : Nos 1 1 1
+BILL OF ENTRY FOR HOME CONSUMPTION PKG 2 G.WT (KGS) 75.2 BE0020520261406
+1.INVSNO 2.ITEMSN 3.CTH 4.CETH 5.ITEM DESCRIPTION 6.FS 7.PQ 8.DC 9.WC10.AQ
+M 1 1 87089900 NOEXCISE 2QB407623 DEFLECTOR RING (AUTOMOTIVE PARTS N N N N N
+E FOR CAPTIVE CONSUMPTION)
+T
+I
+.A
+11
+.
+.
+0
+U
+8
+PI 12.
+B
+C
+R
+OO 13
+1
+.
+0
+C
+8
+.Q
+00
+TY 14.
+N
+C
+O
+.U
+S
+QC 15.S.QTY 16.S.UQC 17
+R
+.S
+D
+CH18.ST
+S
+ND/PR 19.
+N
+RSP 20.R
+N
+EIMP 21.P
+N
+ROV22
+G
+.E
+N
+N
+X
+D
+2 0
+U
+0
+SE
+Y
+23.PRODN24.CNTRL25.QUALFR 26.CONTNT 27.STMNT 28.SUP DOCS 29.ASSESS VALUE 30. TOTAL DUTY
+N N Y N N N 86889.02 19523.9
+DUTY 1. BCD 2.CVD_05 3.SWS 4.SAD 5.IGST 6.G. CESS 7.ADD 8.CVD 9.SG 10.T. VALUE
+P
+Notn No.
+Notn SNo.
+Rate 15 0 O
+Amount 0 0 0
+Duty Fg
+DUTY 1.SP EXD 2.CHCESS 3.TTA 4.CESS 5.CAIDC 6.EAIDC 7.CUS EDC 8.CUS HEC 9.NCD 10.AGGR
+Notn No. C
+Notn SNo.
+Rate 0 0
+Amount 0 0
+Duty Fg 0
+D
+E
+S
+S
+E
+S
+S
+A
+Page 3 Of 6
+Verify using ICETRAK Mobile App (Google Play Store) for authentication & latest version details from ICEGATE Enquiry
+SLIATED
+R
+E
+H
+T
+O
+C.
+SEITUD
+M
+E
+T
+B. I
+13
+1
+0
+0
+3.3
+GLOSSARY
+A : INVSNO - Invoice Sr. No., UPI - Unit Price Invoiced, C.Qty - Commercial Quantity, S.Qty - Standard Quantity, FS - Food Safety and Standards
+YTUD
+PART - III - DUTIES
+43.2 KGS
+009/2025 001/2017
+II544 56
+18 0
+18220.6 0
+0 0
+011/2021
+17
+0
+0
+13033.35
+DUTY
+R Notn No.
+E H Notn SNo.
+T
+O Rate
+C. Amount
+Authority of India, PQ - Plant Quarantine, DC - Central Drugs Standard Control Organisation, WC - WildLife Crime Control Bureau , AQ - Animal
+Quarantine and Certification Services, SCH - Scheme Code
+A
+- SEITUD
+1.OTHCUS 2.OTHCVD 3.PETR CUS4.INFRA CES 5. CUS CVD
+Duty Fg
+--- PAGE 2 LAYOUT ---
+                                                                                    
+                                                                                    
+                                                                                    
+                                           Port Code BE No BE Date BE Type          
+                                           INNSA1   9025944 02/05/2026 H            
+                                           IEC/Br    0307019390/0 FIRST COPY        
+                                           GSTIN/TYPE  27AACCV4229P1ZT/G            
+               INDIAN   CUSTOMS            CB CODE     AACCN5739JCH001              
+                                           TYPE      INV    ITEM CONT               
+                      PORT :               Nos        1      1     1                
+            BILL OF ENTRY FOR HOME CONSUMPTION PKG    2   G.WT (KGS) 75.2 BE0020520261406
+         1.INVSNO 2.ITEMSN 3.CTH 4.CETH    5.ITEM DESCRIPTION   6.FS 7.PQ 8.DC 9.WC10.AQ
+      M    1     1   87089900 NOEXCISE 2QB407623 DEFLECTOR RING (AUTOMOTIVE PARTS N N N N N
+      E                           FOR CAPTIVE CONSUMPTION)                          
+      T                                                                             
+      I                                                                             
+      .A                                                                            
+          11                                                                        
+           .                                                                        
+           .                                                                        
+           0                                                                        
+           U                                                                        
+            8                                                                       
+            PI 12.                                                                  
+                B                                                                   
+                 C                                                                  
+                 R                                                                  
+                 OO  13                                                             
+                     1                                                              
+                      .                                                             
+                      0                                                             
+                      C                                                             
+                       8                                                            
+                       .Q                                                           
+                       00                                                           
+                        TY 14.                                                      
+                             N                                                      
+                             C                                                      
+                             O                                                      
+                              .U                                                    
+                              S                                                     
+                               QC 15.S.QTY 16.S.UQC 17                              
+                                             R                                      
+                                              .S                                    
+                                              D                                     
+                                               CH18.ST                              
+                                                   S                                
+                                                   ND/PR 19.                        
+                                                          N                         
+                                                          RSP 20.R                  
+                                                                N                   
+                                                                EIMP 21.P           
+                                                                      N             
+                                                                      ROV22         
+                                                                          G         
+                                                                          .E        
+                                                                           N        
+                                                                           N        
+                                                                            X       
+                                                                            D       
+                                                                            2 0     
+                                                                             U      
+                                                                              0     
+                                                                              SE    
+                                              Y                                     
+         23.PRODN24.CNTRL25.QUALFR 26.CONTNT 27.STMNT 28.SUP DOCS 29.ASSESS VALUE 30. TOTAL DUTY
+           N     N     Y     N       N      N              86889.02     19523.9     
+         DUTY  1. BCD 2.CVD_05 3.SWS 4.SAD 5.IGST 6.G. CESS 7.ADD 8.CVD 9.SG 10.T. VALUE
+                                            P                                       
+         Notn No.                                                                   
+         Notn SNo.                                                                  
+         Rate   15                                              0 O                 
+         Amount  0                                        0     0                   
+         Duty Fg                                                                    
+         DUTY  1.SP EXD 2.CHCESS 3.TTA 4.CESS 5.CAIDC 6.EAIDC 7.CUS EDC 8.CUS HEC 9.NCD 10.AGGR
+         Notn No.                     C                                             
+         Notn SNo.                                                                  
+         Rate                                             0     0                   
+         Amount                                           0     0                   
+         Duty Fg                                                            0       
+                                D                                                   
+                             E                                                      
+                           S                                                        
+                         S                                                          
+                      E                                                             
+                    S                                                               
+                 S                                                                  
+               A                                                                    
+                                   Page   3 Of 6                                    
+           Verify using ICETRAK Mobile App (Google Play Store) for authentication & latest version details from ICEGATE Enquiry
+       SLIATED                                                                      
+     R                                                                              
+     E                                                                              
+     H                                                                              
+     T                                                                              
+     O                                                                              
+     C.                                                                             
+       SEITUD                                                                       
+      M                                                                             
+      E                                                                             
+      T                                                                             
+      B. I                                                                          
+                            13                                                      
+                             1                                                      
+                             0                                                      
+                              0                                                     
+                              3.3                                                   
+                                       GLOSSARY                                     
+      A : INVSNO - Invoice Sr. No., UPI - Unit Price Invoiced, C.Qty - Commercial Quantity, S.Qty - Standard Quantity, FS - Food Safety and Standards
+       YTUD                                                                         
+                                   PART - III - DUTIES                              
+                                   43.2 KGS                                         
+                                          009/2025 001/2017                         
+                                           II544   56                               
+                                            18     0                                
+                                          18220.6  0                                
+                                            0      0                                
+                                          011/2021                                  
+                                            17                                      
+                                            0                                       
+                                            0                                       
+                                          13033.35                                  
+         DUTY                                                                       
+     R   Notn No.                                                                   
+     E H Notn SNo.                                                                  
+     T                                                                              
+     O   Rate                                                                       
+     C.  Amount                                                                     
+      Authority of India, PQ - Plant Quarantine, DC - Central Drugs Standard Control Organisation, WC - WildLife Crime Control Bureau , AQ - Animal
+      Quarantine and Certification Services, SCH - Scheme Code                      
+       A                                                                            
+       - SEITUD                                                                     
+              1.OTHCUS 2.OTHCVD 3.PETR CUS4.INFRA CES 5. CUS CVD                    
+         Duty Fg                                                                    
+--- PAGE 3 ---
+Port Code BE No BE Date BE Type
+INNSA1 9025944 02/05/2026 H
+IEC/Br 0307019390/0 FIRST COPY
+GSTIN/TYPE 27AACCV4229P1ZT/G
+INDIAN CUSTOMS CB CODE AACCN5739JCH001
+TYPE INV ITEM CONT
+PORT : Nos 1 1 1
+BILL OF ENTRY FOR HOME CONSUMPTION PKG 2 G.WT (KGS) 75.2 BE0020520261406
+PART - IV - ADDITIONAL DETAILS
+A. SVB DETAILS
+1.INVSNO2.ITMSNO 3.REF NO 4. REF DT 5. PRT CD 6.LAB 7.P/F 8.LOAD DATE 9.P/F
+B. PREVIOUS BEs
+1.INVSNO2.ITMSNO 3. BE NO 4. BE DATE 5. PRT CD 6.UNITPRICE 7.CURRENCY CODE
+Y
+C. RE-IMPORT AFTER EXPORT
+1.INVSNO2.ITMSNO3.NOTN NO 4.SLNO 5.FRT 6.INS 7.DUTY 8.SB NO 9.SB DT 10.PORTCD 11.SINV 12.SITEMN
+P
+D. ITEM MANUFACTURER/PRODUCER/GROWER DETAILS
+1.INVSNO2.ITMSNO 3.TYPE 4.MANUFACT CD 5.SOURCE CY 6.TRANS CY 7.ADDRESS
+O
+E. ACCESSORY STATUS
+1.INVSNO2.ITMSNO 3.ACESSORY ITEM DETAILS
+CF. LICENCE DETAILS
+1.INVSNO2.ITMSNO3.LIC SLNO 4.LIC NO 5.LIC DATE6.CODE 7.PORT 8.DEBIT VALUE 9.QTY 10.UQC 11.DEBIT DUTY
+1 1 1 2512011280 06-DEC-25 RD INMUN1 86889.02 10800 NOS 13033.4
+H. CERTIFICATE DETAILS I.HSS DETAILS
+1.CERTIFICATE NUMBER 2.DATE 3.TYPE 1.PRC LEVEL 2.IEC 3.BRANCH SLNO
+D
+J. SINGLE WINDOW DECLARATION
+1.INVSN 2.ITMSNO3.INFO TYP 4.QUALIFIER 5.INFO CD 6.INFO TEXT 7.INFO MSR 8.UQC
+1 1 CHR ESQC 43.2 KGS
+K. SINGLE WINDOW DECLARATION - CONSTITUENTS
+1.INVSN 2.ITMSNO 3.C SNO 4.NAME 5.CODE 6.PERCENTAGE 7.YIELD PCT 8.ING
+S
+L. SINGLE WINDOW DECLARATION - CONTROL
+1.INVSN 2.ITMSNO 3.CONTROL TYPE 4.LOCATION 5.SRT DT 6.END DT 7.RES CD 8.RES TEXT
+S
+M. SUPPORTING DOCUMENTS
+1.INVSN 2.ITMSNO3.TYP 4.ICEGATE ID 5.IRN 6.DOC CODE7.ISSUE PLACE8.ISSUE DT 9.EXP DT
+0 0 70500ENAGARKOT 2026041300151208 Brazil 17-FEB-26
+0 0 27100 NAGARKOT 2026041300151210 Brazil 17-FEB-26
+1 0 38000 NAGARKOT 2026041300151209 Brazil 17-FEB-26
+S N. CONTAINER DETAILS
+1.CONTAINER NUMBER 2.TRUCK NUMBER 3.SEAL NUMBER 4.FCL/LCL
+FFAU6219046 LAAD46330 L
+S
+A
+GLOSSARY
+A : Ref No - SVB Reference Number, Ref Dt - SVB Reference Date; F : Code - Licence Scheme Code; I : PRC - Preceding; K : ING - Ingredient
+Page 4 Of 6
+Verify using ICETRAK Mobile App (Google Play Store) for authentication & latest version details from ICEGATE Enquiry
+NOITAMROFNI
+LANOITIDDA
+REHTO
+G. SCHEME NOTIFICATION AND DUTY FOREGONE DETAILS
+1.INVSNO2.ITMSNO3.EXMP RE4.SCHEME NOTN5.SCH NSNO 6. BCD RATE 7. CVD RATE 8. BCD AMT FG 9. OTH AMT FG
+1 1 N RODTEP 1 0 13033.4 0
+O. INVOICE DETAILS
+1. S NO 2. INVOICE NO 3. INVOICE AMOUNT 4. CUR
+1 0091974852 864 USD
+L : RES CD - Control Result Code, RES TXT - Control Result Text
+--- PAGE 3 LAYOUT ---
+                                                                                    
+                                                                                    
+                                                                                    
+                                           Port Code BE No BE Date BE Type          
+                                           INNSA1   9025944 02/05/2026 H            
+                                           IEC/Br    0307019390/0 FIRST COPY        
+                                           GSTIN/TYPE  27AACCV4229P1ZT/G            
+               INDIAN   CUSTOMS            CB CODE     AACCN5739JCH001              
+                                           TYPE      INV    ITEM CONT               
+                      PORT :               Nos        1      1     1                
+            BILL OF ENTRY FOR HOME CONSUMPTION PKG    2   G.WT (KGS) 75.2 BE0020520261406
+                              PART - IV - ADDITIONAL DETAILS                        
+                                        A. SVB DETAILS                              
+         1.INVSNO2.ITMSNO 3.REF NO 4. REF DT 5. PRT CD 6.LAB 7.P/F 8.LOAD DATE 9.P/F
+                                       B. PREVIOUS BEs                              
+         1.INVSNO2.ITMSNO 3. BE NO 4. BE DATE 5. PRT CD 6.UNITPRICE 7.CURRENCY CODE 
+                                              Y                                     
+                                   C. RE-IMPORT AFTER EXPORT                        
+         1.INVSNO2.ITMSNO3.NOTN NO 4.SLNO 5.FRT 6.INS 7.DUTY 8.SB NO 9.SB DT 10.PORTCD 11.SINV 12.SITEMN
+                                            P                                       
+                             D. ITEM MANUFACTURER/PRODUCER/GROWER DETAILS           
+         1.INVSNO2.ITMSNO 3.TYPE 4.MANUFACT CD 5.SOURCE CY 6.TRANS CY 7.ADDRESS     
+                                         O                                          
+                                     E. ACCESSORY STATUS                            
+         1.INVSNO2.ITMSNO                 3.ACESSORY ITEM DETAILS                   
+                                      CF. LICENCE DETAILS                           
+         1.INVSNO2.ITMSNO3.LIC SLNO 4.LIC NO 5.LIC DATE6.CODE 7.PORT 8.DEBIT VALUE 9.QTY 10.UQC 11.DEBIT DUTY
+           1    1     1    2512011280 06-DEC-25 RD INMUN1 86889.02 10800 NOS 13033.4
+                    H. CERTIFICATE DETAILS                I.HSS DETAILS             
+           1.CERTIFICATE NUMBER 2.DATE  3.TYPE 1.PRC LEVEL 2.IEC   3.BRANCH SLNO    
+                                D                                                   
+                                   J. SINGLE WINDOW DECLARATION                     
+         1.INVSN 2.ITMSNO3.INFO TYP 4.QUALIFIER 5.INFO CD 6.INFO TEXT 7.INFO MSR 8.UQC
+           1    1    CHR     ESQC                                    43.2   KGS     
+                             K. SINGLE WINDOW DECLARATION - CONSTITUENTS            
+         1.INVSN 2.ITMSNO 3.C SNO 4.NAME         5.CODE  6.PERCENTAGE 7.YIELD PCT 8.ING
+                           S                                                        
+                               L. SINGLE WINDOW DECLARATION - CONTROL               
+         1.INVSN 2.ITMSNO 3.CONTROL TYPE 4.LOCATION 5.SRT DT 6.END DT 7.RES CD 8.RES TEXT
+                         S                                                          
+                                    M. SUPPORTING DOCUMENTS                         
+         1.INVSN 2.ITMSNO3.TYP 4.ICEGATE ID 5.IRN   6.DOC CODE7.ISSUE PLACE8.ISSUE DT 9.EXP DT
+           0    0  70500ENAGARKOT     2026041300151208        Brazil 17-FEB-26      
+           0    0  27100 NAGARKOT     2026041300151210        Brazil 17-FEB-26      
+           1    0  38000 NAGARKOT     2026041300151209        Brazil 17-FEB-26      
+                    S                N. CONTAINER DETAILS                           
+           1.CONTAINER NUMBER  2.TRUCK NUMBER     3.SEAL NUMBER      4.FCL/LCL      
+              FFAU6219046                          LAAD46330           L            
+                  S                                                                 
+               A                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                       GLOSSARY                                     
+     A : Ref No - SVB Reference Number, Ref Dt - SVB Reference Date; F : Code - Licence Scheme Code; I : PRC - Preceding; K : ING - Ingredient
+                                                                                    
+                                                                                    
+                                                                                    
+                                   Page   4 Of 6                                    
+           Verify using ICETRAK Mobile App (Google Play Store) for authentication & latest version details from ICEGATE Enquiry
+      NOITAMROFNI                                                                   
+      LANOITIDDA                                                                    
+      REHTO                                                                         
+                            G. SCHEME NOTIFICATION AND DUTY FOREGONE DETAILS        
+         1.INVSNO2.ITMSNO3.EXMP RE4.SCHEME NOTN5.SCH NSNO 6. BCD RATE 7. CVD RATE 8. BCD AMT FG 9. OTH AMT FG
+           1    1     N     RODTEP    1       0                13033.4     0        
+                                       O. INVOICE DETAILS                           
+         1. S NO          2. INVOICE NO          3. INVOICE AMOUNT   4. CUR         
+           1              0091974852                 864              USD           
+     L : RES CD - Control Result Code, RES TXT - Control Result Text                
+--- PAGE 4 ---
+Port Code BE No BE Date BE Type
+INNSA1 9025944 02/05/2026 H
+IEC/Br 0307019390/0 FIRST COPY
+GSTIN/TYPE 27AACCV4229P1ZT/G
+INDIAN CUSTOMS CB CODE AACCN5739JCH001
+TYPE INV ITEM CONT
+PORT : Nos 1 1 1
+BILL OF ENTRY FOR HOME CONSUMPTION PKG 2 G.WT (KGS) 75.2 BE0020520261406
+PART - V - OTHER COMPLIANCES
+B.EXAMINATION INSTRUCTIONS
+Y
+C.COMPULSORY COMPLIANCE
+D. AC REMARKS
+P
+E. EXAMINATION REPORT
+F.SUPERINTENDENT COMMENTS
+O
+OOC No OOC Date
+C
+D
+E
+S
+S
+E
+S
+S
+A
+Page 5 Of 6
+Verify using ICETRAK Mobile App (Google Play Store) for authentication & latest version details from ICEGATE Enquiry
+SECNAILPMOC
+A. EXAMINATION ORDER RMS
+A1.EXAMINATION ORDER
+B1. PGA EXAMINATION INSTRUCTIONS
+Inv No Item No Agency Status
+--- PAGE 4 LAYOUT ---
+                                                                                    
+                                                                                    
+                                                                                    
+                                           Port Code BE No BE Date BE Type          
+                                           INNSA1   9025944 02/05/2026 H            
+                                           IEC/Br    0307019390/0 FIRST COPY        
+                                           GSTIN/TYPE  27AACCV4229P1ZT/G            
+               INDIAN   CUSTOMS            CB CODE     AACCN5739JCH001              
+                                           TYPE      INV    ITEM CONT               
+                      PORT :               Nos        1      1     1                
+            BILL OF ENTRY FOR HOME CONSUMPTION PKG    2   G.WT (KGS) 75.2 BE0020520261406
+                                PART - V - OTHER COMPLIANCES                        
+                                   B.EXAMINATION INSTRUCTIONS                       
+                                                                                    
+                                                                                    
+                                              Y                                     
+                                    C.COMPULSORY COMPLIANCE                         
+                                        D. AC REMARKS                               
+                                           P                                        
+                                     E. EXAMINATION REPORT                          
+                                   F.SUPERINTENDENT COMMENTS                        
+                                         O                                          
+         OOC No                         OOC Date                                    
+                                      C                                             
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                D                                                   
+                                                                                    
+                              E                                                     
+                                                                                    
+                            S                                                       
+                                                                                    
+                          S                                                         
+                                                                                    
+                        E                                                           
+                                                                                    
+                                                                                    
+                     S                                                              
+                                                                                    
+                   S                                                                
+                                                                                    
+                 A                                                                  
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                   Page   5 Of 6                                    
+           Verify using ICETRAK Mobile App (Google Play Store) for authentication & latest version details from ICEGATE Enquiry
+      SECNAILPMOC                                                                   
+                                    A. EXAMINATION ORDER RMS                        
+                                     A1.EXAMINATION ORDER                           
+                                 B1. PGA EXAMINATION INSTRUCTIONS                   
+         Inv No Item No            Agency Status                                    
+--- PAGE 5 ---
+Port Code BE No BE Date BE Type
+INNSA1 9025944 02/05/2026 H
+IEC/Br 0307019390/0 FIRST COPY
+GSTIN/TYPE 27AACCV4229P1ZT/G
+INDIAN CUSTOMS CB CODE AACCN5739JCH001
+TYPE INV ITEM CONT
+PORT : Nos 1 1 1
+BILL OF ENTRY FOR HOME CONSUMPTION PKG 2 G.WT (KGS) 75.2 BE0020520261406
+PART - VI - DECLARATION
+Declaration for 0/0: I/We declare that the contents of the above mentioned invoice(s) and documents are true and correct in every respect.I/We
+have not received and do not know of any other documents or information showing a different description, quantity, price, value, of the said
+goods and that if at any time hereafter I/We discover any document / information showing different facts, I/We will immediately make the same
+known to the Commissioner of Customs.
+Declaration for 0/0: I/We declare that the contents of this Bill of Entry for goods imported against above mentioned Bill of Lading/ Airway Bill
+/Lorry Receipt/Railway Receipt numbers are in accordance with the above mentioned invoice(s) No(s)and other documents presented herewith.
+Declaration for 1/0: I/We declare that the price paid or payable by the importer is as per the details provided above, and any price paid or
+payable in addition to the above will be settled with the seller at the end of a defined period by means of debit note / credit note (post ¿ import
+price adjustment), which are as per the contract attached as a supporting documenYt.
+Declaration for 1/0: I/We declare that there are no payments actually paid or payable for the imported goods by way of cost and services [in
+terms of Rules 10(1)(a)(i), Rule 10(1)(a)(ii), Rule 10 (1) (a) (iii) and Rule 10 (1) (b) of Customs Valuation Rules, 2007], Royalty / Licence Fee /
+subsequent resale or use of goods /other payment as a condition of sale [(PleaPse see Rule 10 (1) (c), (d) & (e) of Customs Valuation Rules,
+2007] other than those declared in the invoice which are mentioned as miscellaneous charges in this Bill of Entry.
+Declaration for 1/0: I/We declare that all conditions or restrictions, if any,O imposed by the seller of any third party on the disposition or use of the
+imported goods [as per proviso to Rule 3(2)) of the Customs Valuation Rules, 2007] are specified above.
+C
+D
+E
+S
+S
+E
+S
+S
+A
+DATE
+PLACE AUTHORISED SIGNATORY
+Page 6 Of 6
+Verify using ICETRAK Mobile App (Google Play Store) for authentication & latest version details from ICEGATE Enquiry
+TNEMETATS
+NOITARALCED.A
+DEZIROHTUA
+.B
+Y
+R
+O
+T
+A
+N
+G
+SI CHA NAME :NAGARKOT FORWARDERS PVT. LTD.
+--- PAGE 5 LAYOUT ---
+                                                                                    
+                                                                                    
+                                                                                    
+                                           Port Code BE No BE Date BE Type          
+                                           INNSA1   9025944 02/05/2026 H            
+                                           IEC/Br    0307019390/0 FIRST COPY        
+                                           GSTIN/TYPE  27AACCV4229P1ZT/G            
+               INDIAN   CUSTOMS            CB CODE     AACCN5739JCH001              
+                                           TYPE      INV    ITEM CONT               
+                      PORT :               Nos        1      1     1                
+            BILL OF ENTRY FOR HOME CONSUMPTION PKG    2   G.WT (KGS) 75.2 BE0020520261406
+                                   PART - VI - DECLARATION                          
+         Declaration for 0/0: I/We declare that the contents of the above mentioned invoice(s) and documents are true and correct in every respect.I/We
+         have not received and do not know of any other documents or information showing a different description, quantity, price, value, of the said
+         goods and that if at any time hereafter I/We discover any document / information showing different facts, I/We will immediately make the same
+         known to the Commissioner of Customs.                                      
+         Declaration for 0/0: I/We declare that the contents of this Bill of Entry for goods imported against above mentioned Bill of Lading/ Airway Bill
+         /Lorry Receipt/Railway Receipt numbers are in accordance with the above mentioned invoice(s) No(s)and other documents presented herewith.
+         Declaration for 1/0: I/We declare that the price paid or payable by the importer is as per the details provided above, and any price paid or
+         payable in addition to the above will be settled with the seller at the end of a defined period by means of debit note / credit note (post ¿ import
+         price adjustment), which are as per the contract attached as a supporting documenYt.
+         Declaration for 1/0: I/We declare that there are no payments actually paid or payable for the imported goods by way of cost and services [in
+         terms of Rules 10(1)(a)(i), Rule 10(1)(a)(ii), Rule 10 (1) (a) (iii) and Rule 10 (1) (b) of Customs Valuation Rules, 2007], Royalty / Licence Fee /
+         subsequent resale or use of goods /other payment as a condition of sale [(PleaPse see Rule 10 (1) (c), (d) & (e) of Customs Valuation Rules,
+         2007] other than those declared in the invoice which are mentioned as miscellaneous charges in this Bill of Entry.
+         Declaration for 1/0: I/We declare that all conditions or restrictions, if any,O imposed by the seller of any third party on the disposition or use of the
+         imported goods [as per proviso to Rule 3(2)) of the Customs Valuation Rules, 2007] are specified above.
+                                         C                                          
+                                   D                                                
+                                                                                    
+                                E                                                   
+                                                                                    
+                              S                                                     
+                                                                                    
+                           S                                                        
+                                                                                    
+                         E                                                          
+                                                                                    
+                      S                                                             
+                                                                                    
+                    S                                                               
+                                                                                    
+                  A                                                                 
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+                                                                                    
+         DATE                                                                       
+                                                                                    
+         PLACE               AUTHORISED SIGNATORY                                   
+                                                                                    
+                                                                                    
+                                   Page   6 Of 6                                    
+           Verify using ICETRAK Mobile App (Google Play Store) for authentication & latest version details from ICEGATE Enquiry
+      TNEMETATS                                                                     
+      NOITARALCED.A                                                                 
+      DEZIROHTUA                                                                    
+      .B                                                                            
+       Y                                                                            
+       R                                                                            
+       O                                                                            
+       T                                                                            
+       A                                                                            
+       N                                                                            
+       G                                                                            
+       SI                                      CHA NAME :NAGARKOT FORWARDERS PVT. LTD.
