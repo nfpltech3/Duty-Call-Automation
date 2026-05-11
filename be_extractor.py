@@ -316,7 +316,8 @@ def process_pdf(file_path: str, sr_no: int) -> tuple[dict, list[str], str]:
                 for j in range(i_top + 1, len(sorted_tops)):
                     row_words = sorted(lines_p0[sorted_tops[j]], key=lambda w: w['x0'])
                     row_text = ' '.join(w['text'] for w in row_words)
-                    if '1.EVENT' in row_text or 'Submission' in row_text: break
+                    if ('1.SNO' in row_text and '2.LCL/' in row_text): break
+                    if any(t in row_text for t in ('GLOSSARY', 'Page ')): break
                     for rw in row_words:
                         if rw['x0'] >= inv_header_x0 - 15 and rw['x1'] <= inv_amt_x0 - 5:
                             if re.match(r'^\d+$', rw['text']): invoices.append(rw['text'])
@@ -1165,9 +1166,22 @@ class BECopyParserApp:
 
             for col in display_cols:
                 a = tk.E if col in _NUMERIC_COLS else tk.W
-                w = 350 if col == "Validation" else 60 if ("NO" in col.upper() and "SR" in col.upper()) else 130
-                if col == "Validation": a = tk.W
-                tree.heading(col, text=col, anchor=tk.CENTER); tree.column(col, width=w, minwidth=60, anchor=a)
+                
+                # 🔧 NEW: Set smart default widths based on the column name
+                if col == "Validation": 
+                    w = 350
+                    a = tk.W
+                elif col in ("SR. NO.", "Sr.No."): 
+                    w = 60
+                elif col == "INVOICE NO.": 
+                    w = 280  # Much wider to fit multiple invoices
+                elif col == "SUPPLIER": 
+                    w = 200  # Give the supplier name some breathing room too
+                else: 
+                    w = 130  # Default width for everything else
+                
+                tree.heading(col, text=col, anchor=tk.CENTER)
+                tree.column(col, width=w, minwidth=60, anchor=a)
 
             for idx, (_, row) in enumerate(df.iterrows()):
                 vals = [str(row[c]) if pd.notnull(row[c]) else "" for c in display_cols]
@@ -1367,22 +1381,86 @@ class BECopyParserApp:
         row_id = tree.identify_row(event.y); col_id = tree.identify_column(event.x)
         if not row_id or not col_id: return
         ci = int(col_id[1:]) - 1; cols = list(tree["columns"]); cn = cols[ci]
+        
+        # Don't allow editing the SR NO or Validation status columns
         if cn.upper() in ("SR. NO.", "SR.NO.") or cn == "Validation": return
+        
         bbox = tree.bbox(row_id, col_id)
         if not bbox: return
         x, y, w, h = bbox
-        entry = tk.Entry(tree, font=("Segoe UI", 10), justify=tk.RIGHT if cn in _NUMERIC_COLS else tk.LEFT)
-        entry.insert(0, tree.item(row_id, "values")[ci]); entry.select_range(0, tk.END); entry.focus_set()
-        entry.place(x=x, y=y, width=w, height=h)
-        def _save(e=None):
-            if not entry.winfo_exists(): return
-            nv = entry.get(); vals = list(tree.item(row_id, "values")); vals[ci] = nv; tree.item(row_id, values=vals)
-            ri = tree.index(row_id); df = self.branch_dfs[branch]
-            if cn in df.columns: df.iat[ri, df.columns.get_loc(cn)] = nv
-            entry.destroy()
+
+        current_val = tree.item(row_id, "values")[ci]
+
+        # 🔧 NEW: If it's the Invoice column, Remarks, or very long text, pop open the big editor
+        if cn in ("INVOICE NO.", "Remarks", "SUPPLIER") or len(str(current_val)) > 35:
+            self._open_long_text_editor(tree, branch, row_id, ci, cn, current_val)
+        else:
+            # Keep the fast, inline editor for short text and numbers (Ass Value, Duty, etc.)
+            entry = tk.Entry(tree, font=("Segoe UI", 10), justify=tk.RIGHT if cn in _NUMERIC_COLS else tk.LEFT)
+            entry.insert(0, current_val); entry.select_range(0, tk.END); entry.focus_set()
+            entry.place(x=x, y=y, width=w, height=h)
+            def _save(e=None):
+                if not entry.winfo_exists(): return
+                nv = entry.get(); vals = list(tree.item(row_id, "values")); vals[ci] = nv; tree.item(row_id, values=vals)
+                ri = tree.index(row_id); df = self.branch_dfs[branch]
+                if cn in df.columns: df.iat[ri, df.columns.get_loc(cn)] = nv
+                entry.destroy()
+                if self.checklist_data or self.checklist_data_by_bl:
+                    self._run_validation(); self._render_table(); self._update_summary_bar()
+            entry.bind("<Return>", _save); entry.bind("<FocusOut>", _save)
+
+    def _open_long_text_editor(self, tree, branch, row_id, col_index, col_name, current_value) -> None:
+        """Opens a multi-line popup window for viewing and editing long text."""
+        dlg = tk.Toplevel(self.root)
+        dlg.title(f"View / Edit {col_name}")
+        dlg.configure(bg=_PANEL_WHITE)
+        dlg.transient(self.root)
+        dlg.grab_set()
+
+        # Center the popup
+        x = self.root.winfo_x() + (self.root.winfo_width() - 400) // 2
+        y = self.root.winfo_y() + (self.root.winfo_height() - 250) // 2
+        dlg.geometry(f"400x250+{x}+{y}")
+
+        # Calculate count if it's a comma-separated column like Invoices
+        header_text = f"{col_name}:"
+        if col_name in ("INVOICE NO.", "SCRIPTS NO.") and current_value:
+            # Split by comma, remove empty spaces, and count
+            item_list = [item for item in str(current_value).split(',') if item.strip()]
+            if item_list:
+                header_text = f"{col_name}  ({len(item_list)}):"
+
+        tk.Label(dlg, text=header_text, font=("Segoe UI", 10, "bold"), bg=_PANEL_WHITE, fg=_PRIMARY_BLUE).pack(anchor=tk.W, padx=16, pady=(12, 4))
+
+        # A large, multi-line text box that wraps words automatically
+        text_widget = tk.Text(dlg, font=("Consolas", 10), height=8, wrap=tk.WORD, relief=tk.SOLID, bd=1, padx=8, pady=8, bg="#F9FAFB")
+        text_widget.pack(fill=tk.BOTH, expand=True, padx=16, pady=4)
+        text_widget.insert("1.0", current_value)
+
+        def _save_and_close():
+            nv = text_widget.get("1.0", "end-1c").strip()
+            # Update the UI Treeview
+            vals = list(tree.item(row_id, "values"))
+            vals[col_index] = nv
+            tree.item(row_id, values=vals)
+            # Update the underlying DataFrame
+            ri = tree.index(row_id)
+            df = self.branch_dfs[branch]
+            if col_name in df.columns:
+                df.iat[ri, df.columns.get_loc(col_name)] = nv
+            dlg.destroy()
+            # Re-run validation if data changed
             if self.checklist_data or self.checklist_data_by_bl:
-                self._run_validation(); self._render_table(); self._update_summary_bar()
-        entry.bind("<Return>", _save); entry.bind("<FocusOut>", _save)
+                self._run_validation()
+                self._render_table()
+                self._update_summary_bar()
+
+        btn_frame = tk.Frame(dlg, bg=_PANEL_WHITE)
+        btn_frame.pack(fill=tk.X, pady=12, side=tk.BOTTOM)
+        tk.Button(btn_frame, text="Cancel", command=dlg.destroy, bg="#E5E7EB", fg=_DARK_TEXT, font=("Segoe UI", 10), relief=tk.FLAT, width=10, cursor="hand2").pack(side=tk.RIGHT, padx=(10, 16))
+        tk.Button(btn_frame, text="Save", command=_save_and_close, bg=_PRIMARY_BLUE, fg="#FFF", font=("Segoe UI", 10, "bold"), relief=tk.FLAT, width=10, cursor="hand2").pack(side=tk.RIGHT)
+
+        text_widget.focus_set()
 
     def _get_active_branch(self):
         if not hasattr(self, "notebook") or not self.notebook or not hasattr(self, "_tab_keys"): return None
