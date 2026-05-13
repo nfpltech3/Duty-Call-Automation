@@ -9,6 +9,9 @@ import datetime
 import win32clipboard
 import html
 from tkinter import ttk
+import requests
+import json
+import time
 
 # Replace with your Google Apps Script Web App URL
 GOOGLE_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyongYtOYdTh1SHTlSoFsTK7N0Xp53UblTAHgu6ZuWT4WopTS1uIcqIKx23MiyJqepCrw/exec"
@@ -151,7 +154,7 @@ def process_pdf(file_path: str, sr_no: int) -> tuple[dict, list[str], str]:
         "ASS. VALUE": "", "DUTY AMT. AS PAR BOE/CHECK LIST": "",
         "PENALTY CHARGES": "", "INTEREST CHARGES": "",
         "TOTAL DUTY AMT (CASH)": "", "REMARK FOR PENALTY & INTEREST": "NA",
-        "RMS/NONRMS": "", "ETA": ""
+        "RMS/NONRMS": "", "ETA": "", "BE TYPE": ""
     }
     warnings: list[str] = []
     fname = Path(file_path).name
@@ -175,6 +178,14 @@ def process_pdf(file_path: str, sr_no: int) -> tuple[dict, list[str], str]:
             else: warnings.append(f"File {fname}: Unknown branch code '{br_code}'. Defaulting to CSN.")
         else:
             warnings.append(f"File {fname}: IEC/Br not found. Defaulting to CSN.")
+
+        be_type = "Home Consumption"
+        m_type = re.search(r'\d{2}/\d{2}/\d{4}\s+(H|W)\b', text_p0)
+        if m_type:
+            be_type = "Inbond" if m_type.group(1) == 'W' else "Home Consumption"
+        elif any(kw in text_p0.upper() for kw in ["WAREHOUSING", "INBOND", "IN-BOND", "IN BOND"]):
+            be_type = "Inbond"
+        data["BE TYPE"] = be_type
 
         be_no_x0, be_date_x0 = None, None
         for i, top in enumerate(sorted_tops):
@@ -261,6 +272,7 @@ def process_pdf(file_path: str, sr_no: int) -> tuple[dict, list[str], str]:
         if tot_duty: data["DUTY AMT. AS PAR BOE/CHECK LIST"] = tot_duty
 
         awb_no, awb_dt = "", ""
+        m_cand, m_dt, h_cand, h_dt = "", "", "", ""
         for i, top in enumerate(sorted_tops):
             line_words = sorted(lines_p0[top], key=lambda w: w['x0'])
             line_text = ' '.join(w['text'] for w in line_words)
@@ -285,16 +297,20 @@ def process_pdf(file_path: str, sr_no: int) -> tuple[dict, list[str], str]:
                     hx0, hx1 = h_words[0]['x0'], h_words[-1]['x1']
                     vals = [nw['text'] for nw in value_words if nw['x0'] >= hx0 - 15 and nw['x1'] <= hx1 + 15]
                     return ''.join(vals)
-                if fcl_lcl == 'F':
-                    awb_no = _get_col_value("6.MAWB")
-                    mawb_x = next((hw['x0'] for hw in line_words if '6.MAWB' in hw['text']), 300)
-                    dts = [w['text'] for w in value_words if re.match(r'\d{2}/\d{2}/\d{4}', w['text']) and w['x0'] > mawb_x]
-                    if dts: awb_dt = dts[0]
-                elif fcl_lcl == 'L':
-                    awb_no = _get_col_value("8.HAWB")
-                    hawb_x = next((hw['x0'] for hw in line_words if '8.HAWB' in hw['text']), 400)
-                    dts = [w['text'] for w in value_words if re.match(r'\d{2}/\d{2}/\d{4}', w['text']) and w['x0'] > hawb_x]
-                    if dts: awb_dt = dts[0]
+                m_cand = _get_col_value("6.MAWB")
+                mawb_x = next((hw['x0'] for hw in line_words if '6.MAWB' in hw['text']), 300)
+                mdts = [w['text'] for w in value_words if re.match(r'\d{2}/\d{2}/\d{4}', w['text']) and w['x0'] > mawb_x]
+                m_dt = mdts[0] if mdts else ""
+
+                h_cand = _get_col_value("8.HAWB")
+                hawb_x = next((hw['x0'] for hw in line_words if '8.HAWB' in hw['text']), 400)
+                hdts = [w['text'] for w in value_words if re.match(r'\d{2}/\d{2}/\d{4}', w['text']) and w['x0'] > hawb_x]
+                h_dt = hdts[0] if hdts else ""
+
+                if fcl_lcl == 'L':
+                    awb_no, awb_dt = h_cand, h_dt
+                else:
+                    awb_no, awb_dt = m_cand, m_dt
                 break
         data["HAWB NO"] = awb_no
         data["HAWB DT."] = clean_date(awb_dt)
@@ -343,6 +359,16 @@ def process_pdf(file_path: str, sr_no: int) -> tuple[dict, list[str], str]:
                 if found: break
         if supplier: data["SUPPLIER"] = supplier
         else: warnings.append(f"File {fname}: Supplier name not found.")
+
+        # Specialized Post-Correction for Bentley Motors (Fallback if MAWB empty or NOMAWB)
+        if supplier and "BENTLEY" in str(supplier).upper():
+            m_clean = str(m_cand).upper().strip()
+            if not m_clean or "NOMAWB" in m_clean:
+                if h_cand:
+                    data["HAWB NO"] = h_cand
+                    data["HAWB DT."] = clean_date(h_dt)
+                    # Ensure previously registered error warnings related to missing AWB are cleared 
+                    warnings[:] = [w for w in warnings if "Correct HAWB/MAWB number not selected" not in w]
 
         lic_tot, lic_found = 0.0, False
         last_lic_page = -1
@@ -714,6 +740,8 @@ class BECopyParserApp:
         self.checklist_data_by_bl: dict[str, dict] = {}
         self.validation_results: dict[str, dict] = {}
         self.branch_dfs: dict[str, pd.DataFrame] = {}
+        self.copied_tabs: set[str] = set()
+        self.pushed_tabs: set[str] = set()
         self._copy_flash_id = None
         self.upload_thread = None
         self.root.protocol("WM_DELETE_WINDOW", self._on_closing)
@@ -754,6 +782,8 @@ class BECopyParserApp:
         self.btn_clear.pack(side=tk.LEFT, padx=(8, 0))
         self.btn_copy_table = self._brand_button(toolbar, "📋  Copy Table", self._on_copy_table, state=tk.DISABLED)
         self.btn_copy_table.pack(side=tk.RIGHT)
+        self.btn_push_shakti = self._brand_button(toolbar, "🚀  Push to Shakti", self._push_to_shakti, state=tk.DISABLED)
+        self.btn_push_shakti.pack(side=tk.RIGHT, padx=(0, 8))
 
         # Status label in toolbar row, right-aligned, high contrast
         self.status_var = tk.StringVar(value="Select BE Copy PDFs to begin")
@@ -811,7 +841,15 @@ class BECopyParserApp:
         """Shows a prominent temporary green flash near the Copy button."""
         if self._copy_flash_id:
             self.root.after_cancel(self._copy_flash_id)
-        self._set_status("✅  Copied to clipboard! Paste into Outlook.", "#2E7D32")
+        self._set_status("✅  Copied to clipboard!", "#2E7D32")
+        # Revert after 5 seconds
+        self._copy_flash_id = self.root.after(5000, lambda: self._set_status("Ready", _MUTED_GRAY))
+
+    def _flash_push_success(self) -> None:
+        """Shows a prominent temporary green flash for successful Zoho sync."""
+        if self._copy_flash_id:
+            self.root.after_cancel(self._copy_flash_id)
+        self._set_status("🚀  Pushed successfully to Shakti! Click 'Copy Table' to proceed.", "#2E7D32")
         # Revert after 5 seconds
         self._copy_flash_id = self.root.after(5000, lambda: self._set_status("Ready", _MUTED_GRAY))
 
@@ -955,7 +993,7 @@ class BECopyParserApp:
         self._update_summary_bar()
 
         if self.branch_dfs:
-            self.btn_copy_table.configure(state=tk.NORMAL)
+            # Copy state is now driven dynamically by notebook tab change listener inside _render_table
             # Build a helpful status message
             total_loaded = len(self.checklist_data) + len([
                 k for k in self.checklist_data_by_bl
@@ -966,7 +1004,7 @@ class BECopyParserApp:
             if new_count: parts.append(f"{new_count} added")
             if replaced_count: parts.append(f"{replaced_count} replaced")
             action_text = ", ".join(parts) if parts else "processed"
-            self._set_status(f"Checklists {action_text}. Total loaded: {total_loaded}. Review, then copy.")
+            self._set_status(f"Checklists {action_text}. Total loaded: {total_loaded}. Review, then Push to Shakti.")
             if hasattr(self, "_tab_keys") and "__validation_report__" in self._tab_keys:
                 try: self.notebook.select(self._tab_keys.index("__validation_report__"))
                 except Exception: pass
@@ -982,6 +1020,7 @@ class BECopyParserApp:
         self.checklist_data = {}
         self.checklist_data_by_bl = {}
         self.validation_results = {}
+        self.copied_tabs = set()
         self.be_warnings, self.cl_warnings, self.all_warnings = [], [], []
         self.summary_bar.pack_forget()
         self.btn_checklist.configure(state=tk.DISABLED)
@@ -1047,6 +1086,7 @@ class BECopyParserApp:
         if self.branch_dfs:
             self.btn_checklist.configure(state=tk.NORMAL)
             self.btn_clear.configure(state=tk.NORMAL)
+            # Push & Copy buttons remain disabled until checklists are loaded
             msg = f"Parsed {total_parsed} BE(s) ({skoda_count} Skoda, {gen_count} General). Select checklists for validation report."
             self._set_status(msg)
         else:
@@ -1072,14 +1112,7 @@ class BECopyParserApp:
                         result["status"] = "WARNING"
                     self.validation_results[be_no] = result
                     if cl.get("job_no") and job_col: df.at[idx, job_col] = cl["job_no"]
-                else:
-                    self.validation_results[be_no] = {
-                        "be_no": be_no, "job_no": "", "file_name": "", "status": "HIGH RISK",
-                        "match_method": "No match", "remarks": ["No matching checklist found"],
-                        "be_ass": _to_float(be_data["ASS. VALUE"]), "cl_ass": 0.0, "ass_diff": 0.0,
-                        "be_duty": _to_float(be_data["TOTAL DUTY AMT (CASH)"]), "cl_duty": 0.0, "duty_diff": 0.0,
-                        "be_scripts": _to_float(be_data["SCRIPTS UTILISED VALUE"]), "cl_foregone": 0.0, "foregone_diff": 0.0,
-                        "branch_match": True, "bl_match": True}
+
         for be_no, cl in self.checklist_data.items():
             if be_no not in self.validation_results:
                 self.cl_warnings.append(f"Checklist BE {be_no} (Job {cl.get('job_no','')}): No matching BE Copy.")
@@ -1107,7 +1140,7 @@ class BECopyParserApp:
 
         for branch, df in self.branch_dfs.items():
             if df.empty: continue
-            if self.validation_results:
+            if self.validation_results or self.checklist_data:
                 be_col = "BOE NO." if "BOE NO." in df.columns else "BE No" if "BE No" in df.columns else None
                 statuses, levels = [], []
                 for _, row in df.iterrows():
@@ -1115,8 +1148,12 @@ class BECopyParserApp:
                     vr = self.validation_results.get(be_no, {})
                     st = vr.get("status", "")
                     if not st:
-                        statuses.append("")
-                        levels.append("")
+                        if self.checklist_data or self.checklist_data_by_bl:
+                            statuses.append("HIGH RISK — No matching checklist found")
+                            levels.append("HIGH RISK")
+                        else:
+                            statuses.append("")
+                            levels.append("")
                         continue
 
                     # Build user-friendly remark for the Validation column
@@ -1202,6 +1239,36 @@ class BECopyParserApp:
             try: self.notebook.select(selected_idx)
             except Exception: pass
 
+        # 🔧 Dynamic Dynamic Enablement: Hooks directly into the tab selection stream
+        def _sync_copy_button_state(event=None):
+            if not hasattr(self, "notebook") or not self.notebook: return
+            active_tab = self._get_active_branch()
+            has_validation_context = bool(self.checklist_data or self.checklist_data_by_bl)
+            
+            # 1. PUSH ENABLEMENT: Enabled ONLY if checklists are loaded AND at least one row has both a BE No & Job No
+            df = self.branch_dfs.get(active_tab)
+            has_pushable = False
+            if df is not None and not df.empty:
+                be_col = next((c for c in df.columns if ("BE" in c.upper() or "BOE" in c.upper()) and "NO" in c.upper()), None)
+                job_col = next((c for c in df.columns if "JOB" in c.upper() and "NO" in c.upper()), None)
+                if be_col and job_col:
+                    has_pushable = any(str(r.get(be_col, "")).strip() and str(r.get(job_col, "")).strip() for _, r in df.iterrows())
+
+            if has_validation_context and active_tab and active_tab not in ("General", "__validation_report__") and has_pushable:
+                self.btn_push_shakti.configure(state=tk.NORMAL)
+            else:
+                self.btn_push_shakti.configure(state=tk.DISABLED)
+                
+            # 2. COPY ENABLEMENT: Enabled ONLY if this specific tab has successfully pushed to Zoho
+            if active_tab and active_tab in getattr(self, "pushed_tabs", set()):
+                self.btn_copy_table.configure(state=tk.NORMAL)
+            else:
+                self.btn_copy_table.configure(state=tk.DISABLED)
+
+        if self.notebook:
+            self.notebook.bind("<<NotebookTabChanged>>", _sync_copy_button_state)
+            _sync_copy_button_state() # Initialize for whatever tab landed selected immediately
+
     # ── CHANGE 3: Validation Report — removed Match Method & Status columns ──
     def _render_validation_report_tab(self, style) -> None:
         frame = tk.Frame(self.notebook, bg=_PANEL_WHITE)
@@ -1210,7 +1277,7 @@ class BECopyParserApp:
         report_cols = ["BE No.", "CHA Job No.", "Checklist File",
                        "BE Ass. Value", "CL Ass. Value", "Ass. Value Diff",
                        "BE Duty (Cash)", "CL Duty (Cash)", "Duty Diff",
-                       "BE Scripts Value", "CL Foregone Duty", "Foregone Duty Diff", "Remarks"]
+                       "BE Scripts Value", "CL Foregone Duty", "Foregone Duty Diff"]
         canvas = tk.Canvas(frame, bg=_PANEL_WHITE, highlightthickness=0)
         yscroll = ttk.Scrollbar(frame, orient=tk.VERTICAL, command=canvas.yview)
         xscroll = ttk.Scrollbar(frame, orient=tk.HORIZONTAL, command=canvas.xview)
@@ -1226,7 +1293,6 @@ class BECopyParserApp:
             ("ass",      "Assessable Value Breakdown", 3, "#BBDEFB"),
             ("duty",     "Duty Amount (Cash)",         3, "#C8E6C9"),
             ("scripts",  "Scripts & Foregone Duty",    3, "#E1BEE7"),
-            ("remarks",  "Status",                     1, "#CFD8DC"),
         ]
 
         column_mapping = {
@@ -1242,7 +1308,6 @@ class BECopyParserApp:
             9:  ("scripts", 0),
             10: ("scripts", 1),
             11: ("scripts", 2),
-            12: ("remarks", 0),
         }
 
         group_frames = {}
@@ -1265,7 +1330,7 @@ class BECopyParserApp:
                      padx=12, pady=8, borderwidth=1, highlightthickness=1, highlightbackground=_BORDER_GRAY
                      ).grid(row=1, column=inner_col, sticky="nsew")
 
-        col_widths = [90, 80, 220, 120, 120, 100, 120, 120, 100, 120, 120, 100, 200]
+        col_widths = [90, 80, 220, 120, 120, 100, 120, 120, 100, 120, 120, 100]
         for ci, width in enumerate(col_widths):
             group_name, inner_col = column_mapping[ci]
             group_frames[group_name].grid_columnconfigure(inner_col, minsize=width)
@@ -1276,8 +1341,7 @@ class BECopyParserApp:
             vals = [vr.get("be_no",""), vr.get("job_no",""), vr.get("file_name",""),
                     vr.get("be_ass",""), vr.get("cl_ass",""), vr.get("ass_diff",0.0),
                     vr.get("be_duty",""), vr.get("cl_duty",""), vr.get("duty_diff",0.0),
-                    vr.get("be_scripts",""), vr.get("cl_foregone",""), vr.get("foregone_diff",0.0),
-                    "; ".join(vr.get("remarks",[]))]
+                    vr.get("be_scripts",""), vr.get("cl_foregone",""), vr.get("foregone_diff",0.0)]
             for ci, val in enumerate(vals):
                 group_name, inner_col = column_mapping[ci]
                 cn = report_cols[ci]
@@ -1313,7 +1377,6 @@ class BECopyParserApp:
             if abs(vr.get("ass_diff", 0)) > 500
             or abs(vr.get("duty_diff", 0)) > 500
             or abs(vr.get("foregone_diff", 0)) > 500
-            or vr.get("match_method") == "No match"
         ]
         if not high_diff_rows:
             return  # Nothing to upload — exit silently
@@ -1524,13 +1587,13 @@ class BECopyParserApp:
             if df is None or df.empty: return
 
             # ── 1. STRICT BLOCK: UNMATCHED BE / CHECKLISTS ──
-            if self.validation_results:
+            if self.checklist_data or self.checklist_data_by_bl:
                 be_col = "BOE NO." if "BOE NO." in df.columns else "BE No" if "BE No" in df.columns else None
                 if be_col:
                     unmatched = [
                         str(r.get(be_col, "")).strip() 
                         for _, r in df.iterrows() 
-                        if self.validation_results.get(str(r.get(be_col, "")).strip(), {}).get("match_method") == "No match"
+                        if str(r.get(be_col, "")).strip() not in self.validation_results
                     ]
                     if unmatched:
                         messagebox.showerror(
@@ -1591,8 +1654,196 @@ class BECopyParserApp:
             tbl_html = generate_html_table(df, exclude_cols={"Validation", "_lvl"})
             copy_html_to_clipboard(tbl_html)
             self._flash_copy_success()
+            
+            # Record that this tab was successfully copied
+            self.copied_tabs.add(active)
         finally:
-            self.btn_copy_table.configure(state=tk.NORMAL)
+            pass
+
+    def _get_zoho_access_token(self) -> str:
+        """Authenticates with Zoho using a caching strategy to save API calls."""
+        import json
+        import requests
+        import time
+        
+        # 1. 🛑 CHECK THE CACHE FIRST
+        # If we have a saved token, and the current time is before the expiry time, reuse it!
+        if hasattr(self, '_cached_zoho_token') and self._cached_zoho_token:
+            if time.time() < getattr(self, '_token_expiry', 0):
+                return self._cached_zoho_token
+
+        # 2. 🟢 IF NO CACHE OR EXPIRED, FETCH A NEW ONE
+        # Resolve location of token file relative to current context (dev or compiled)
+        cred_path = get_exe_path() / "shakti_secret.json"
+        if not cred_path.exists():
+            cred_path = get_base_path() / "shakti_secret.json"
+            
+        if not cred_path.exists():
+            raise FileNotFoundError("Connection Failed: 'shakti_secret.json' file is missing from directory.")
+            
+        with open(cred_path, "r", encoding="utf-8") as f:
+            creds = json.load(f)
+            
+        auth_url = "https://accounts.zoho.in/oauth/v2/token"
+        payload = {
+            "grant_type": "refresh_token",
+            "client_id": creds["client_id"],
+            "client_secret": creds["client_secret"],
+            "refresh_token": creds["refresh_token"]
+        }
+        
+        r = requests.post(auth_url, data=payload)
+        r.raise_for_status()
+        
+        response_data = r.json()
+        new_token = response_data.get("access_token", "")
+        
+        # 3. 💾 SAVE TO CACHE
+        # Zoho returns an 'expires_in' value (usually 3600 seconds / 1 hour)
+        expires_in = response_data.get("expires_in", 3600)
+        
+        self._cached_zoho_token = new_token
+        # Set expiry to Current Time + 3600 seconds, minus a 60-second safety buffer
+        self._token_expiry = time.time() + int(expires_in) - 60 
+        
+        return new_token
+
+    def _push_to_shakti(self) -> None:
+        self.btn_push_shakti.configure(state=tk.DISABLED)
+        active = self._get_active_branch()
+        
+        # Rule 1: Block General
+        if not active or active in ("General", "__validation_report__"):
+            messagebox.showerror("Action Blocked", "Push to Shakti is not allowed for General or Validation Report tabs. Must be a Skoda branch.")
+            self.btn_push_shakti.configure(state=tk.NORMAL)
+            return
+            
+        df = self.branch_dfs.get(active)
+        if df is None or df.empty: 
+            self.btn_push_shakti.configure(state=tk.NORMAL)
+            return
+
+        # Bulletproof fuzzy scanning for Job No and BE No columns
+        be_col = next((c for c in df.columns if ("BE" in c.upper() or "BOE" in c.upper()) and "NO" in c.upper()), None)
+        job_col = next((c for c in df.columns if "JOB" in c.upper() and "NO" in c.upper()), None)
+        
+        records_to_push = []
+        skipped_inbond = []
+        for idx, row in df.iterrows():
+            be_no = str(row.get(be_col, "")).strip() if be_col else ""
+            job_no = str(row.get(job_col, "")).strip() if job_col else ""
+            if not be_no: continue
+            if not job_no: continue
+            
+            if be_no in self.raw_be_data:
+                # Rule 2: Block Inbond (Safely handles case sensitivity)
+                be_type = str(self.raw_be_data[be_no].get("BE TYPE", "Home Consumption")).upper()
+                if "INBOND" in be_type:
+                    skipped_inbond.append(be_no)
+                    continue
+                
+                # Convert to cleaned float and round to respect Zoho's decimal field specifications
+                ass_val = round(_to_float(self.raw_be_data[be_no].get("ASS. VALUE", "0")), 4)
+                total_duty = round(_to_float(self.raw_be_data[be_no].get("TOTAL DUTY AMT (CASH)", "0")), 4)
+                scripts_val = round(_to_float(self.raw_be_data[be_no].get("SCRIPTS UTILISED VALUE", "0")), 2)
+                
+                records_to_push.append({
+                    "Job_No": job_no,
+                    "BE_Ass_Value": ass_val,
+                    "BE_Total_Duty": total_duty,
+                    "BE_Forgone_Duty": scripts_val
+                })
+        
+        if skipped_inbond:
+            msg = f"Skipped {len(skipped_inbond)} Inbond BE(s) (Push is blocked for Inbond type):\n\n" + ", ".join(skipped_inbond)
+            messagebox.showwarning("Inbond Records Skipped", msg)
+        
+        if not records_to_push:
+            messagebox.showinfo("No Records", "No valid BE records found to push.")
+            self.btn_push_shakti.configure(state=tk.NORMAL)
+            return
+            
+        def push_thread():
+            try:
+                # URL: For the GET and PATCH Requests (Updating the Client DSR)
+                dsr_report_url = "https://creator.zoho.in/api/v2/nisarg_nagarkot182/shakti-3-0/report/Sea_DSR_form_Report"
+                
+                live_token = self._get_zoho_access_token()
+                
+                headers = {
+                    "Authorization": f"Zoho-oauthtoken {live_token}",
+                    "Content-Type": "application/json"
+                }
+                
+                success_count = 0
+                failure_logs = []
+                
+                for record in records_to_push:
+                    try:
+                        # ==========================================
+                        # STEP 1: Find DSR record using Lookup Field
+                        # ==========================================
+                        search_params = {"criteria": f'Job_No.Job_No=={record["Job_No"]}'}
+                        
+                        search_resp = requests.get(dsr_report_url, headers=headers, params=search_params)
+                        search_data = search_resp.json()
+
+                        if search_data.get("code") != 3000 or not search_data.get("data"):
+                            raise Exception(f"DSR record not found for Job {record['Job_No']}")
+
+                        dsr_record_id = search_data["data"][0]["ID"]
+
+                        # STEP 2: Patch DSR record
+                        payload = {
+                            "data": {
+                                "BE_Ass_Value": record["BE_Ass_Value"],
+                                "BE_Total_Duty": record["BE_Total_Duty"],
+                                "BE_Forgone_Duty": record["BE_Forgone_Duty"]
+                            }
+                        }
+                        patch_url = f"{dsr_report_url}/{dsr_record_id}"
+                        patch_response = requests.patch(patch_url, headers=headers, json=payload)
+                        
+                        try:
+                            patch_data = patch_response.json()
+                        except ValueError:
+                            raise Exception("Server returned invalid response during update.")
+
+                        if patch_response.status_code >= 400 or patch_data.get("code") != 3000:
+                            raw_error = patch_data.get("message", "Unknown database error.")
+                            raise Exception(f"DSR Update Failed: {raw_error}")
+
+                        success_count += 1
+                        
+                    except Exception as e:
+                        failure_logs.append(f"Job {record.get('Job_No','?')}: {str(e)}")
+                
+                def _success():
+                    if not failure_logs:
+                        messagebox.showinfo("Push Successful", f"Successfully pushed {success_count} record(s) to Shakti DSR.")
+                    else:
+                        msg = f"Completed with mixed results:\n✅ Pushed: {success_count}\n❌ Failed: {len(failure_logs)}\n\nErrors:\n"
+                        msg += "\n".join(failure_logs[:5])
+                        if len(failure_logs) > 5: msg += "\n... and more"
+                        messagebox.showwarning("Push Finished with Errors", msg)
+                    
+                    # Enable copy if at least 1 record was successfully pushed
+                    if success_count > 0:
+                        self.pushed_tabs.add(active)
+                        self.btn_copy_table.configure(state=tk.NORMAL)
+                        self._flash_push_success()
+                    
+                    self.btn_push_shakti.configure(state=tk.NORMAL)
+                self.root.after(0, _success)
+                
+            except Exception as e:
+                def _fail():
+                    messagebox.showerror("Push Failed", f"Critical error communicating with Shakti: {e}")
+                    self.btn_push_shakti.configure(state=tk.NORMAL)
+                self.root.after(0, _fail)
+                
+        import threading
+        threading.Thread(target=push_thread, daemon=True).start()
 
     def _on_closing(self) -> None:
         """Handles the window close event to ensure background uploads finish."""

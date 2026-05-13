@@ -1,7 +1,7 @@
 # Duty Call Automation
 
 Automated Bill of Entry & Checklist Reconciliation tool built for Nagarkot Forwarders Pvt. Ltd.
-It parses PDF documents to extract duty information and identify discrepancies.
+It parses PDF documents to extract duty information, identifies discrepancies, and pushes validated data to Zoho Creator (Shakti DSR).
 
 > 📖 **Looking for instructions on how to use the application?** 
 > Please refer to the [USER_GUIDE.md](./USER_GUIDE.md) for a comprehensive, step-by-step breakdown of the interface, workflows, and troubleshooting.
@@ -12,6 +12,7 @@ It parses PDF documents to extract duty information and identify discrepancies.
 - PDFPlumber for text extraction
 - Pandas for data manipulation
 - Google Sheets API for automated logging
+- Zoho Creator REST API v2 for Shakti DSR sync
 
 ---
 
@@ -68,6 +69,22 @@ To enable the background validation log uploader:
 
 ---
 
+### Zoho Shakti DSR Integration
+To enable the "Push to Shakti" feature which syncs BE values (Assessable Value, Total Duty, Forgone Duty) to the Zoho Creator Client DSR form:
+
+1. Create a `shakti_secret.json` file in the **same directory** as `be_extractor.py` (or alongside the built `.exe`):
+```json
+{
+    "client_id": "YOUR_ZOHO_CLIENT_ID",
+    "client_secret": "YOUR_ZOHO_CLIENT_SECRET",
+    "refresh_token": "YOUR_ZOHO_REFRESH_TOKEN"
+}
+```
+2. The Refresh Token must have the scope `ZohoCreator.report.READ,ZohoCreator.report.UPDATE`.
+3. This file is **excluded from git** via `.gitignore` — never commit secrets.
+
+---
+
 ### Build Executable (For Desktop Apps)
 
 1. Install PyInstaller (Inside venv):
@@ -83,9 +100,12 @@ pyinstaller DutyCallAutomation.spec
 3. Locate Executable:
 The application will be generated in the `dist/` folder.
 
+4. Deploy:
+Copy `shakti_secret.json` into the same folder as the built `.exe`. The logo is bundled inside the executable automatically.
+
 ---
 
 ## Notes
 - **ALWAYS use virtual environment for Python.**
-- Do not commit `venv/`.
+- Do not commit `venv/`, `dist/`, `build/`, or any secret JSON files.
 - Run and test before pushing.

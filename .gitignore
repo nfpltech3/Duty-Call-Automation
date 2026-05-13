@@ -7,8 +7,14 @@ build/
 client_secret.json
 credentials.json
 token.json
+shakti_secret.json
 .vscode/
 .idea/
 
 .DS_Store
 Thumbs.db
+
+# Test/scratch files
+*.pdf
+scratch.*
+scratch_*.py
