@@ -101,7 +101,7 @@ pyinstaller DutyCallAutomation.spec
 The application will be generated in the `dist/` folder.
 
 4. Deploy:
-Copy `shakti_secret.json` into the same folder as the built `.exe`. The logo is bundled inside the executable automatically.
+Simply share the single `DutyCallAutomation.exe` file. Both `logo.png` and `shakti_secret.json` are bundled inside the executable automatically — no companion files needed.
 
 ---
 

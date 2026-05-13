@@ -5,7 +5,7 @@ a = Analysis(
     ['be_extractor.py'],
     pathex=[],
     binaries=[],
-    datas=[('logo.png', '.')],
+    datas=[('logo.png', '.'), ('shakti_secret.json', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
