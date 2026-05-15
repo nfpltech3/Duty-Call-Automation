@@ -18,3 +18,14 @@ Thumbs.db
 *.pdf
 scratch.*
 scratch_*.py
+check_*.py
+dump_*.py
+find_*.py
+inspect_*.py
+validate_*.py
+verify_*.py
+test_*.py
+diagnose_*.py
+text_all.txt
+email_preview.html
+error_log.txt

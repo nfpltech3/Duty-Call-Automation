@@ -13,7 +13,7 @@ import requests
 import json
 import time
 
-# Replace with your Google Apps Script Web App URL
+# Replace with your Google Apps Script Web App URL  
 GOOGLE_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyongYtOYdTh1SHTlSoFsTK7N0Xp53UblTAHgu6ZuWT4WopTS1uIcqIKx23MiyJqepCrw/exec"
 
 def clean_date(d):
@@ -152,7 +152,7 @@ def process_pdf(file_path: str, sr_no: int) -> tuple[dict, list[str], str]:
         "HAWB NO": "", "HAWB DT.": "", "BOE NO.": "", "BOE DATE": "",
         "INVOICE NO.": "", "SCRIPTS NO.": "", "SCRIPTS UTILISED VALUE": 0.0,
         "ASS. VALUE": "", "DUTY AMT. AS PAR BOE/CHECK LIST": "",
-        "PENALTY CHARGES": "", "INTEREST CHARGES": "",
+        "PENALTY CHARGES": "", "FINE CHARGES": "", "INTEREST CHARGES": "",
         "TOTAL DUTY AMT (CASH)": "", "REMARK FOR PENALTY & INTEREST": "NA",
         "RMS/NONRMS": "", "ETA": "", "BE TYPE": ""
     }
@@ -266,6 +266,8 @@ def process_pdf(file_path: str, sr_no: int) -> tuple[dict, list[str], str]:
         if tot_amt: data["TOTAL DUTY AMT (CASH)"] = tot_amt
         pnlty = get_value_from_headers(words_p0, "14.TOTAL DUTY", 5, 3)
         if pnlty and pnlty != "0": data["PENALTY CHARGES"] = pnlty
+        fine_c = get_value_from_headers(words_p0, "14.TOTAL DUTY", 5, 2)
+        if fine_c and fine_c != "0": data["FINE CHARGES"] = fine_c
         int_c = get_value_from_headers(words_p0, "14.TOTAL DUTY", 5, 4)
         if int_c and int_c != "0": data["INTEREST CHARGES"] = int_c
         tot_duty = get_value_from_headers(words_p0, "14.TOTAL DUTY", 5, 5)
@@ -570,7 +572,7 @@ def _detect_doc_type(file_path: str) -> str:
     except Exception:
         return "unknown"
 
-def validate_be_vs_checklist(be_data: dict, cl_data: dict, be_branch: str, check_branch: bool = True) -> dict:
+def validate_be_vs_checklist(be_data: dict, cl_data: dict, be_branch: str, check_branch: bool = True, raw_be_data: dict | None = None) -> dict:
     result: dict = {
         "be_no": be_data.get("BOE NO.", ""), "job_no": cl_data.get("job_no", ""),
         "file_name": cl_data.get("file_name", ""), "status": "OK", "match_method": "BE No",
@@ -578,6 +580,7 @@ def validate_be_vs_checklist(be_data: dict, cl_data: dict, be_branch: str, check
         "be_ass": 0.0, "cl_ass": 0.0, "ass_diff": 0.0,
         "be_duty": 0.0, "cl_duty": 0.0, "duty_diff": 0.0,
         "be_scripts": 0.0, "cl_foregone": 0.0, "foregone_diff": 0.0,
+        "penalty": 0.0, "fine": 0.0, "interest": 0.0,
         "remarks": [],
     }
     if check_branch and cl_data["branch"] and cl_data["branch"] != be_branch:
@@ -599,6 +602,12 @@ def validate_be_vs_checklist(be_data: dict, cl_data: dict, be_branch: str, check
     result["cl_foregone"] = cl_data.get("foregone_duty", 0.0)
     result["foregone_diff"] = round(result["be_scripts"] - result["cl_foregone"], 2)
 
+    # Extract Penalty, Fine, Interest from the raw (unformatted) BE data
+    raw = raw_be_data or be_data
+    result["penalty"] = _to_float(raw.get("PENALTY CHARGES", 0))
+    result["fine"] = _to_float(raw.get("FINE CHARGES", 0))
+    result["interest"] = _to_float(raw.get("INTEREST CHARGES", 0))
+
     has_high = (abs(result["ass_diff"]) > 500 or abs(result["duty_diff"]) > 500 or abs(result["foregone_diff"]) > 500)
     has_warn  = (100 < abs(result["ass_diff"]) <= 500 or
                 100 < abs(result["duty_diff"]) <= 500 or
@@ -612,6 +621,16 @@ def validate_be_vs_checklist(be_data: dict, cl_data: dict, be_branch: str, check
     elif has_verify or has_warn: result["status"] = "WARNING"
     elif has_minor: result["status"] = "MINOR"
     else: result["status"] = "OK"
+
+    # Informational remark: flag when duty diff may be explained by additional charges
+    if abs(result["duty_diff"]) > 0 and (result["penalty"] > 0 or result["fine"] > 0 or result["interest"] > 0):
+        charges = []
+        if result["penalty"] > 0: charges.append(f"Penalty ₹{result['penalty']:,.2f}")
+        if result["fine"] > 0: charges.append(f"Fine ₹{result['fine']:,.2f}")
+        if result["interest"] > 0: charges.append(f"Interest ₹{result['interest']:,.2f}")
+        result["remarks"].append(f"Duty diff may be due to: {', '.join(charges)}")
+        result["has_extra_charges"] = True
+
     return result
 
 
@@ -635,9 +654,18 @@ def get_unified_be_data(row: dict, branch: str) -> dict:
     return {}
 
 
-def format_csn(data): return {"SR. NO.": data["SR. NO."], "CHA JOB NO.": data["CHA JOB NO."], "SUPPLIER": data["SUPPLIER"], "HAWB NO": data["HAWB NO"], "HAWB DT.": data["HAWB DT."], "BOE NO.": data["BOE NO."], "BOE DATE": data["BOE DATE"], "INVOICE NO.": data["INVOICE NO."], "SCRIPTS NO.": data["SCRIPTS NO."], "SCRIPTS UTILISED VALUE": data["SCRIPTS UTILISED VALUE"], "ASS. VALUE": data["ASS. VALUE"], "DUTY AMT. AS PAR BOE/CHECK LIST": data["DUTY AMT. AS PAR BOE/CHECK LIST"], "PENALTY CHARGES": data["PENALTY CHARGES"], "INTEREST CHARGES": data["INTEREST CHARGES"], "TOTAL DUTY AMT (CASH)": data["TOTAL DUTY AMT (CASH)"], "REMARK FOR PENALTY & INTEREST": data["REMARK FOR PENALTY & INTEREST"], "RMS/NONRMS": data["RMS/NONRMS"]}
-def format_clc(data): return {"SR. NO.": data["SR. NO."], "CHA JOB NO.": data["CHA JOB NO."], "SUPPLIER": data["SUPPLIER"], "MBL NO/HBL NO": data["HAWB NO"], "HAWB DT.": data["HAWB DT."], "BOE NO.": data["BOE NO."], "BOE DATE": data["BOE DATE"], "INVOICE NO.": data["INVOICE NO."], "SCRIPTS NO.": data["SCRIPTS NO."], "SCRIPTS UTILISED VALUE": data["SCRIPTS UTILISED VALUE"], "ASS. VALUE": data["ASS. VALUE"], "DUTY AMT. AS PAR BOE/CHECK LIST": data["DUTY AMT. AS PAR BOE/CHECK LIST"], "PENALTY CHARGES": data["PENALTY CHARGES"], "INTEREST CHARGES": data["INTEREST CHARGES"], "TOTAL DUTY AMT (CASH)": data["TOTAL DUTY AMT (CASH)"], "REMARK FOR PENALTY & INTEREST": data["REMARK FOR PENALTY & INTEREST"]}
-def format_pune(data): return {"Sr.No.": data["SR. NO."], "Job No": data["CHA JOB NO."], "Supplier": data["SUPPLIER"], "Invoice no.": data["INVOICE NO."], "BL No": data["HAWB NO"], "BL DATE": data["HAWB DT."], "BE No": data["BOE NO."], "BE Dt.": data["BOE DATE"], "Ass. Value": data["ASS. VALUE"], "Debit Duty": data["SCRIPTS UTILISED VALUE"], "Duty": data["DUTY AMT. AS PAR BOE/CHECK LIST"], "Penalty": data["PENALTY CHARGES"], "Interest Charges": data["INTEREST CHARGES"], "Total Amt": data["TOTAL DUTY AMT (CASH)"], "REMARK": data["REMARK FOR PENALTY & INTEREST"], "ETA": data["ETA"]}
+def _merge_penalty_fine(data: dict) -> str:
+    """Combine Penalty and Fine into a single display value for branch tables.
+    Raw FINE CHARGES is preserved in the data model for the email alert."""
+    p = _to_float(data.get("PENALTY CHARGES", 0))
+    f = _to_float(data.get("FINE CHARGES", 0))
+    total = p + f
+    if total == 0: return ""
+    return str(round(total, 2))
+
+def format_csn(data): return {"SR. NO.": data["SR. NO."], "CHA JOB NO.": data["CHA JOB NO."], "SUPPLIER": data["SUPPLIER"], "HAWB NO": data["HAWB NO"], "HAWB DT.": data["HAWB DT."], "BOE NO.": data["BOE NO."], "BOE DATE": data["BOE DATE"], "INVOICE NO.": data["INVOICE NO."], "SCRIPTS NO.": data["SCRIPTS NO."], "SCRIPTS UTILISED VALUE": data["SCRIPTS UTILISED VALUE"], "ASS. VALUE": data["ASS. VALUE"], "DUTY AMT. AS PAR BOE/CHECK LIST": data["DUTY AMT. AS PAR BOE/CHECK LIST"], "PENALTY CHARGES": _merge_penalty_fine(data), "INTEREST CHARGES": data["INTEREST CHARGES"], "TOTAL DUTY AMT (CASH)": data["TOTAL DUTY AMT (CASH)"], "REMARK FOR PENALTY & INTEREST": data["REMARK FOR PENALTY & INTEREST"], "RMS/NONRMS": data["RMS/NONRMS"]}
+def format_clc(data): return {"SR. NO.": data["SR. NO."], "CHA JOB NO.": data["CHA JOB NO."], "SUPPLIER": data["SUPPLIER"], "MBL NO/HBL NO": data["HAWB NO"], "HAWB DT.": data["HAWB DT."], "BOE NO.": data["BOE NO."], "BOE DATE": data["BOE DATE"], "INVOICE NO.": data["INVOICE NO."], "SCRIPTS NO.": data["SCRIPTS NO."], "SCRIPTS UTILISED VALUE": data["SCRIPTS UTILISED VALUE"], "ASS. VALUE": data["ASS. VALUE"], "DUTY AMT. AS PAR BOE/CHECK LIST": data["DUTY AMT. AS PAR BOE/CHECK LIST"], "PENALTY CHARGES": _merge_penalty_fine(data), "INTEREST CHARGES": data["INTEREST CHARGES"], "TOTAL DUTY AMT (CASH)": data["TOTAL DUTY AMT (CASH)"], "REMARK FOR PENALTY & INTEREST": data["REMARK FOR PENALTY & INTEREST"]}
+def format_pune(data): return {"Sr.No.": data["SR. NO."], "Job No": data["CHA JOB NO."], "Supplier": data["SUPPLIER"], "Invoice no.": data["INVOICE NO."], "BL No": data["HAWB NO"], "BL DATE": data["HAWB DT."], "BE No": data["BOE NO."], "BE Dt.": data["BOE DATE"], "Ass. Value": data["ASS. VALUE"], "Debit Duty": data["SCRIPTS UTILISED VALUE"], "Duty": data["DUTY AMT. AS PAR BOE/CHECK LIST"], "Penalty": _merge_penalty_fine(data), "Interest Charges": data["INTEREST CHARGES"], "Total Amt": data["TOTAL DUTY AMT (CASH)"], "REMARK": data["REMARK FOR PENALTY & INTEREST"], "ETA": data["ETA"]}
 
 def format_general(data: dict) -> dict:
     return {
@@ -836,6 +864,16 @@ class BECopyParserApp:
         self.status_var.set(text)
         self.status_lbl.configure(fg=color)
         self.root.update_idletasks()
+
+    def _log_error(self, message: str) -> None:
+        """Silently appends timestamped errors to error_log.txt beside the EXE."""
+        try:
+            log_path = Path(sys.executable).parent / "error_log.txt" if getattr(sys, "frozen", False) else Path("error_log.txt")
+            with open(log_path, "a", encoding="utf-8") as f:
+                ts = datetime.datetime.now().strftime("%d-%b-%Y %H:%M:%S")
+                f.write(f"[{ts}] {message}\n")
+        except Exception:
+            pass  # If even logging fails, swallow silently
 
     def _flash_copy_success(self) -> None:
         """Shows a prominent temporary green flash near the Copy button."""
@@ -1106,7 +1144,8 @@ class BECopyParserApp:
                 match_method = "BE No"
                 if cl:
                     check_branch = (branch != "General")
-                    result = validate_be_vs_checklist(be_data, cl, branch, check_branch=check_branch)
+                    raw = self.raw_be_data.get(be_no, {})
+                    result = validate_be_vs_checklist(be_data, cl, branch, check_branch=check_branch, raw_be_data=raw)
                     result["match_method"] = match_method
                     if match_method == "BL/HBL fallback" and result["status"] == "OK":
                         result["status"] = "WARNING"
@@ -1172,7 +1211,7 @@ class BECopyParserApp:
                     if foregone_diff != 0.0:
                         remarks_list.append(f"Foregone Duty Diff: {foregone_diff}")
                     for r in vr.get("remarks", []):
-                        if "mismatch" in r.lower():
+                        if "mismatch" in r.lower() or "due to" in r.lower():
                             remarks_list.append(r)
 
                     if st == "OK" and not remarks_list:
@@ -1389,6 +1428,19 @@ class BECopyParserApp:
             for vr in high_diff_rows:
                 be_no = vr.get("be_no", "")
                 importer = clean_importer_name(self.raw_be_data.get(be_no, {}).get("IMPORTER", "Unknown"))
+
+                # Look up raw Penalty/Fine/Interest from original extraction, not
+                # from the validation result (get_unified_be_data strips these fields)
+                raw = self.raw_be_data.get(be_no, {})
+                penalty_val = _to_float(raw.get("PENALTY CHARGES", 0))
+                fine_val = _to_float(raw.get("FINE CHARGES", 0))
+                interest_val = _to_float(raw.get("INTEREST CHARGES", 0))
+
+                # Build a simple remark if any extra charges exist
+                remark = ""
+                if penalty_val > 0 or fine_val > 0 or interest_val > 0:
+                    remark = "Duty diff may be due to extra charges."
+
                 rows_to_append.append([
                     timestamp,                              # Timestamp
                     importer,                               # Importer
@@ -1403,26 +1455,29 @@ class BECopyParserApp:
                     vr.get("be_scripts", ""),               # BE Scripts
                     vr.get("cl_foregone", ""),              # CL Foregone
                     vr.get("foregone_diff", ""),            # Foregone Diff
+                    penalty_val,                            # Penalty
+                    fine_val,                               # Fine
+                    interest_val,                           # Interest
+                    remark,                                 # Remarks
                 ])
 
             # Send an unauthenticated HTTP POST to the Google Apps Script Web App
             response = requests.post(
-                GOOGLE_WEB_APP_URL, 
-                data=json.dumps({"rows": rows_to_append}), 
+                GOOGLE_WEB_APP_URL,
+                data=json.dumps({"rows": rows_to_append}),
                 headers={"Content-Type": "application/json"},
-                timeout=15 
+                timeout=30
             )
-            
-            # Check 1: Did Google's servers reject the request entirely? (e.g., 429 Too Many Requests, 500 Server Error)
+
+            # Check 1: Did Google's servers reject the request entirely?
             if response.status_code != 200:
                 err_text = response.text
-                if "<html>" in err_text.lower() or "<!doctype" in err_text.lower() or "<style" in err_text.lower():
+                if "<html>" in err_text.lower() or "<!doctype" in err_text.lower() or "<style>" in err_text.lower():
                     err_text = "HTML Error Page (Verify 'Who has access: Anyone' in deployment settings)"
                 raise Exception(f"HTTP {response.status_code}: {err_text[:150]}")
 
             # Check 2: Did the Apps Script run, but catch an internal Google Sheets error?
             if response.text.startswith("Error:"):
-                # Raise an exception so it triggers the retry loop or fails gracefully
                 raise Exception(f"Apps Script Error: {response.text}")
 
             # If we get here, it truly succeeded!
@@ -1432,13 +1487,24 @@ class BECopyParserApp:
                     "#2E7D32"
                 )
             self.root.after(0, _update_ui)
-            return  # Exit the loop and the function entirely
+            return
+
+        except requests.exceptions.ReadTimeout:
+            # Timeout usually means the upload + email succeeded but Google was slow
+            # to respond. Log it silently and show success in UI.
+            self._log_error("Google Sheets request timed out (data likely uploaded successfully).")
+            def _timeout_ui():
+                self._set_status(
+                    f"Done: {len(rows_to_append)} high-diff row(s) sent (response slow).",
+                    "#2E7D32"
+                )
+            self.root.after(0, _timeout_ui)
 
         except Exception as e:
-            err_msg = str(e)
-            def _fail_ui():
-                self._set_status(f"Google Sheets Upload Failed: {err_msg}", "#D8232A")
-            self.root.after(0, _fail_ui)
+            self._log_error(f"Google Sheets Upload Failed: {e}")
+            def _error_ui():
+                self._set_status("❌ Upload failed (Check error_log.txt)", "#D8232A")
+            self.root.after(0, _error_ui)
 
     def _on_double_click_cell(self, event, tree, branch) -> None:
         row_id = tree.identify_row(event.y); col_id = tree.identify_column(event.x)

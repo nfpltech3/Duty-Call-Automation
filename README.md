@@ -59,13 +59,18 @@ python be_extractor.py
 
 ---
 
-### Google Sheets Integration
-To enable the background validation log uploader:
-1. Create a Google Cloud Project with the Sheets and Drive APIs enabled.
-2. Setup an OAuth Client ID (Desktop Application type).
-3. Download the credentials and save them as `client_secret.json` in the same directory as `be_extractor.py`.
-4. (Optional) For headless server operation, you can download a Service Account key instead and save it as `credentials.json`.
-5. The Google Sheet must contain a tab explicitly named `"Validation Log"`.
+### Google Sheets & Email Alert Integration
+To enable the background validation log uploader and HIGH RISK email alerts:
+1. Create a Google Apps Script Web App with the code from `appscript_doPost.js`.
+2. Deploy as a Web App with **Execute as: Me** and **Who has access: Anyone**.
+3. Copy the deployed URL into the `GOOGLE_WEB_APP_URL` constant in `be_extractor.py`.
+4. The Google Sheet must contain a tab explicitly named `"Validation Log"` with 17 columns (A–Q):
+   - A: Timestamp, B: Importer, C: BE No, D: Job No
+   - E–G: BE Ass Val / CL Ass Val / Ass Diff
+   - H–J: BE Duty / CL Duty / Duty Diff
+   - K–M: BE Scripts / CL Foregone / Foregone Diff
+   - N: Penalty, O: Fine, P: Interest, Q: Remarks
+5. Upload errors are logged silently to `error_log.txt` (beside the `.exe` or in the project root).
 
 ---
 
